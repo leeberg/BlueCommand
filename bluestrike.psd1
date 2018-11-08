@@ -18,19 +18,19 @@
     # CompatiblePSEditions = @()
     
     # ID used to uniquely identify this module
-    GUID = '7d9d3476-88eb-4c1c-af84-b8bf54cf3153'
+    GUID = '7d9d3976-88eb-4c1c-af84-b8bf54cf3153'
     
     # Author of this module
-    Author = 'Adam Driscoll'
+    Author = 'Lee Berg'
     
     # Company or vendor of this module
-    CompanyName = 'Ironman Software, LLC'
+    CompanyName = 'Berg Consulting'
     
     # Copyright statement for this module
-    Copyright = '(c) 2018 Adam Driscoll. All rights reserved.'
+    Copyright = '(c) 2018 Lee Berg. All rights reserved.'
     
     # Description of the functionality provided by this module
-    Description = 'A chatroom built on Universal Dashboard.'
+    Description = 'A sec tool built on Universal Dashboard.'
     
     # Minimum version of the Windows PowerShell engine required by this module
     # PowerShellVersion = ''
@@ -89,29 +89,6 @@
     # List of all files packaged with this module
     # FileList = @()
     
-    # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData = @{
-    
-        PSData = @{
-    
-            # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @('UniversalDashboard')
-    
-            # A URL to the license for this module.
-            LicenseUri = 'https://github.com/ironmansoftware/ud-chatroom/blob/master/LICENSE'
-    
-            # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/ironmansoftware/ud-chatroom'
-    
-            # A URL to an icon representing this module.
-            IconUri = 'https://github.com/ironmansoftware/ud-chatroom/raw/master/images/icon.png'
-    
-            # ReleaseNotes of this module
-            # ReleaseNotes = ''
-    
-        } # End of PSData hashtable
-    
-    } # End of PrivateData hashtable
     
     # HelpInfo URI of this module
     # HelpInfoURI = ''
