@@ -2,7 +2,7 @@ BlueStrike
 ==================
 ![](./img/bluestrike.png) 
 
-**BlueStrike** is Threat Tooling and Simulation platform built on the PowerShell Universal Dashboard to provide a lightweight web ui for the latest in Threat Tooling.
+**BlueStrike** is Threat Tooling and Simulation platform built on the PowerShell Universal Dashboard to provide a lightweight web UI for execution attack simulation and providing an integration front for other powerful tools like Empire, nmap, and more...
 
 **Brought to you by**  
 [Lee Berg](https://leealanberg.com)
