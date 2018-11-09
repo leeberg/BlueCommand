@@ -2,7 +2,7 @@ BlueStrike
 ==================
 ![](./img/bluestrike.png) 
 
-**BlueStrike** is Threat Tooling and Simulation platform built on the PowerShell Universal Dashboard to provide a lightweight web UI for execution of attack simulation and providing an integration front for other powerful tools like Empire, nmap, and more...
+**BlueStrike** is Threat Tooling and Simulation platform built on the [PowerShell Universal Dashboard](https://universaldashboard.io/) from [Adam Driscoll](https://github.com/adamdriscoll) to provide a lightweight web UI for execution of attack simulations and providing an integration front end for powerful tools like Empire, nmap, and more...
 
 **Brought to you by**  
 [Lee Berg](https://leealanberg.com)
@@ -30,7 +30,4 @@ BlueStrike
 1. Install Uniersal Dashboard
 2. Start ./StartBlueStrike.ps1
 3. Setup Empire Rest API
-4. $$$$$$$
-
-
-![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
+4. ![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
