@@ -49,7 +49,7 @@ function Start-BSDash {
 
             
     # Port Scanner Page
-    $Global:DiscoveryUDPage = New-UDPage -Name "Network Discovery" -Icon search -Content {
+    $Global:NetworkDiscoveryUDPage = New-UDPage -Name "Network - Discovery" -Icon search -Content {
         
             New-UDInput -Title "Discover Network Resources IPv4 Network Scan" -Id "DiscoveryInput" -Content {
                 New-UDInputField -Type 'textarea' -Name 'StartAddress' -Placeholder 'Start IPv4 Address' -DefaultValue '192.168.200.1'
@@ -92,7 +92,7 @@ function Start-BSDash {
 
 
     # Operations Page
-    $Global:OperationsUDPage = New-UDPage -Name "Network Operations" -Icon fighter_jet -RefreshInterval 5 -Content {
+    $Global:NetworkOperationsUDPage = New-UDPage -Name "Network - Operations" -Icon fighter_jet -RefreshInterval 5 -Content {
         
             $ResourcesJsonFile = '.\scan.json'
 
@@ -103,7 +103,7 @@ function Start-BSDash {
             
             New-UDInput -Title "Operations" -Id "HackForm" -Content {
                 New-UDInputField -Type 'select' -Name 'Computer' -Values $ResourcesJsonContent.Hostname
-                New-UDInputField -Type 'select' -Name 'Operation' -Values @("Ping", "Spray", "UBA", "MimiKatz") -DefaultValue "Ping"
+                New-UDInputField -Type 'select' -Name 'Operation' -Values @("Ping", "Nuke", "RDP", "SSH", "NMAP") -DefaultValue "Ping"
                 New-UDInputField -Type 'textarea' -Name 'AdditionalNotes' -Placeholder 'Additional Notes'
             } -Endpoint {
                 param($Computer, $Operation, $AdditionalNotes)
@@ -132,7 +132,7 @@ function Start-BSDash {
 
 
     # Configuration Page
-    $Global:ConfigurationEmpireUDPage = New-UDPage -Name "Empire Configuration" -Icon empire -Content {
+    $Global:EmpireConfigurationUDPage = New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
             $ResourcesJsonFile = '.\scan.json'
 
@@ -192,9 +192,21 @@ function Start-BSDash {
             
             
     }
-        
+     
+    
+    $Global:ADDiscoveryUDPage = New-UDPage -Name "Active Directory - Discovery" -Icon sitemap -Content {
+    }
 
-    $Global:EmpireOperationsUDPage = New-UDPage -Name "Empire Operations" -Icon empire -Content {
+    $Global:ADOperationsUDPage = New-UDPage -Name "Active Directory - Operations" -Icon sitemap -Content {
+    }
+
+    $Global:ADConfigurationUDPage = New-UDPage -Name "Active Directory - Config" -Icon sitemap -Content {
+    }
+
+    $Global:SprayOperationsUDPage = New-UDPage -Name "Spray Operations" -Icon spinner -Content {
+    }
+
+    $Global:EmpireOperationsUDPage = New-UDPage -Name "Empire - Operations" -Icon empire -Content {
 
         $ResourcesJsonFile = '.\EmpireAgents.json'
 
@@ -217,7 +229,21 @@ function Start-BSDash {
     }
 
         Start-UDDashboard -Port $Port -Content {
-        New-UDDashboard -Title "BlueStrike" -Pages @($HomeUDPage, $Global:DiscoveryUDPage, $Global:OperationsUDPage, $Global:ConfigurationEmpireUDPage, $Global:EmpireOperationsUDPage)
+        New-UDDashboard -Title "BlueStrike" -Pages @(
+            $HomeUDPage, 
+            
+            $Global:NetworkDiscoveryUDPage, 
+            $Global:NetworkOperationsUDPage, 
+            
+            $Global:ADDiscoveryUDPage, 
+            $Global:ADOperationsUDPage,
+            $Global:ADConfigurationUDPage,
+
+            $Global:SprayOperationsUDPage, 
+            
+            $Global:EmpireOperationsUDPage,
+            $Global:EmpireConfigurationUDPage
+            )
     }
 }
 
