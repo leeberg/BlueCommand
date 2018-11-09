@@ -1,16 +1,33 @@
-# BlueStrike
-PowerShell Universal Dashboard based Threat Tooling
+BlueStrike
+==================
+![](./img/bluestrike.png) 
+
+**BlueStrike** is Threat Tooling and Simulation platform built on the PowerShell Universal Dashboard to provide a lightweight web ui for the latest in Threat Tooling.
+
+**Brought to you by**  
+[Lee Berg](https://leealanberg.com)
+
+## Features
+* Built on [Universal Dashboard](https://universaldashboard.io/) for modern web based UI
+* PowerShell based network scanning/discovery
+* PowerShell Network Operations
+* Nmap Integration
+* [Empire](https://www.powershellempire.com/) Integration
+    * Rest Integration to retrive Agents, Configs, Modules, Etc.
+    * Execute Actions / Modules against Empire Agents
+    * Export Action Results / Reports from Empire
+* Password Spray Controller
+* Mimikatz integraiton via PoshKatz
+* Active Directory LDAP RECON Operations
+* Lightweight Data Storage
+* Run from Container or via simple script
+* Slack Integration
 
 
 
 
-
-
-
-
-
-
-
-### Getting Empire Started
-
-* ./empire --rest --password 'P@ssword!'
+## Getting Started
+1. Install Uniersal Dashboard
+2. Start ./StartBlueStrike.ps1
+3. Setup Empire Rest API
+4. $$$$$$$
