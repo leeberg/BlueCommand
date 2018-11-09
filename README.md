@@ -27,7 +27,7 @@ BlueStrike
 
 
 ## Getting Started
-1. Install Uniersal Dashboard
+1. Install Universal Dashboard - Install-Module UniversalDashboard -AccecptLicense
 2. Start ./StartBlueStrike.ps1
 3. Setup Empire Rest API
 4. ![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
