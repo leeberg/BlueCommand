@@ -31,3 +31,6 @@ BlueStrike
 2. Start ./StartBlueStrike.ps1
 3. Setup Empire Rest API
 4. $$$$$$$
+
+
+![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
