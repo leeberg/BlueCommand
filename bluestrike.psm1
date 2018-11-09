@@ -203,6 +203,10 @@ function Start-BSDash {
     $Global:ADConfigurationUDPage = New-UDPage -Name "Active Directory - Config" -Icon sitemap -Content {
     }
 
+    $Global:POSHkatzUDPage = New-UDPage -Name "PoshKatz - Operations" -Icon download -Content {
+    }
+
+
     $Global:SprayOperationsUDPage = New-UDPage -Name "Spray Operations" -Icon spinner -Content {
     }
 
@@ -228,6 +232,11 @@ function Start-BSDash {
 
     }
 
+
+    $Global:AboutUDPage = New-UDPage -Name "About" -Icon question -Content {
+        New-UDCard -Title "About" -Id "AboutPageCard" -Text "Hey what's up - check out ya boi: http://leealanberg.com/"
+    }
+
         Start-UDDashboard -Port $Port -Content {
         New-UDDashboard -Title "BlueStrike" -Pages @(
             $HomeUDPage, 
@@ -242,7 +251,11 @@ function Start-BSDash {
             $Global:SprayOperationsUDPage, 
             
             $Global:EmpireOperationsUDPage,
-            $Global:EmpireConfigurationUDPage
+            $Global:EmpireConfigurationUDPage,
+
+            $Global:POSHkatzUDPage,
+
+            $Global:AboutUDPage
             )
     }
 }
