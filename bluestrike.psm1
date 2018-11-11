@@ -148,7 +148,7 @@ function Start-BSDash {
                 New-UDInputField -Type 'textarea' -Name 'EmpireToken' -DefaultValue '6jq0or8kcawfi4vjyktehwuqugv7uhxes04mrqkq'
             } -Endpoint {
                 param($EmpireComputer, $EmpirePort, $EmpireToken)
-                New-UDInputAction -Toast "Save ya settings!"
+                New-UDInputAction -Toast "Retrieving Empire Configurations!"
                 
                 if(Test-Path '.\EmpireConfig.json')
                 {
@@ -159,7 +159,7 @@ function Start-BSDash {
                 $EmpireConfiguration = .\Tools\Empire\GetEmpireStatus.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
                 $EmpireConfiguration | ConvertTo-Json >> '.\EmpireConfig.json'
                 
-
+                #AGENTS
                 if(Test-Path '.\EmpireAgents.json')
                 {
                     # Clear Existings
@@ -168,6 +168,16 @@ function Start-BSDash {
 
                 $EmpireAgents = .\Tools\Empire\GetEmpireAgents.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
                 $EmpireAgents | ConvertTo-Json >> '.\EmpireAgents.json'
+
+                #MODULES
+                if(Test-Path '.\EmpireModules.json')
+                {
+                    # Clear Existings
+                    Clear-Content '.\EmpireModules.json'
+                }
+
+                $EmpireAgents = .\Tools\Empire\GetEmpireModules.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
+                $EmpireAgents | ConvertTo-Json >> '.\EmpireModules.json'
 
             }
 
@@ -189,6 +199,11 @@ function Start-BSDash {
                 $JsonData = .\ReadEmpireAgents.ps1 
                 $JsonData | Out-UDGridData
             }        
+
+            New-UDGrid -Title "Empire Modules" -Headers @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -Properties @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -AutoRefresh -Endpoint {
+                $JsonData = .\ReadEmpireModules.ps1 
+                $JsonData | Out-UDGridData
+            }      
             
             
     }
@@ -210,24 +225,79 @@ function Start-BSDash {
     $Global:SprayOperationsUDPage = New-UDPage -Name "Spray Operations" -Icon spinner -Content {
     }
 
+
+
+
+    ###### EMPIRE OPERATIONS!!!!!!!!!!!!!
+
     $Global:EmpireOperationsUDPage = New-UDPage -Name "Empire - Operations" -Icon empire -Content {
 
-        $ResourcesJsonFile = '.\EmpireAgents.json'
+        <#
+         ## GET EMPIRE CONFIGO
+         $ResourcesConfigJsonFile = '.\EmpireConfig.json'
 
-        if(Test-Path $ResourcesJsonFile)
-        {
-            $ResourcesJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesJsonFile -raw)
+         if(Test-Path $ResourcesConfigJsonFile)
+         {
+             $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
+             $EmpireBox = $ResourcesEmpireConfig.empire_host
+             $EmpirePort = $ResourcesEmpireConfig.empire_port
+             $EmpireToken = $ResourcesEmpireConfig.empire_token
+         }
+        
+         New-UDGrid -Title "Empire Config" -Headers @("empire_host", "empire_port", "empire_token", "version", "api_username", "install_path") -Properties @("empire_host", "empire_port", "empire_token", "version", "api_username", "install_path") -AutoRefresh -Endpoint {
+            $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
+            $ResourcesEmpireConfig | Out-UDGridData
         }
 
+        #>
+        ## GET AGENTS
+        $ResourcesAgentsJsonFile = '.\EmpireAgents.json'
 
-        New-UDInput -Title "Agent Operations" -Id "AgentOperations" -Content {
-            New-UDInputField -Type 'select' -Name 'EmpireAgent' -Values $ResourcesJsonContent.name
-            New-UDInputField -Type 'select' -Name 'OperationType' -Values @("Run Shell Command", "Execute a Module")
-            New-UDInputField -Type 'textbox' -Name 'Action' 
+        if(Test-Path $ResourcesAgentsJsonFile)
+        {
+            $ResourcesAgentJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesAgentsJsonFile -raw)
+        }
+
+        ## GET LISTS OF MODULES
+        $ResourcesModulesJsonFile = '.\EmpireModules.json'
+
+        if(Test-Path $ResourcesModulesJsonFile)
+        {
+            $ResourcesModuleJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesModulesJsonFile -raw)
+        }
+
+        
+
+        New-UDGrid -Title "Empire Modules" -Headers @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -Properties @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -AutoRefresh -Endpoint {
+            $JsonData = .\ReadEmpireModules.ps1 
+            $JsonData | Out-UDGridData
+        }      
+
+        New-UDInput -Title "Execute Module" -Id "AgentModuleOperations" -Content {
+            New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name
+            New-UDInputField -Type 'select' -Name 'ModuleName' -Values $ResourcesModuleJsonContent.name
+            New-UDInputField -Type 'textbox' -Name 'ModuleOptions'
         } -Endpoint {
-            param($EmpireAgent)
-            $Text = 'Executing Action on: ' +$EmpireAgent
-            New-UDInputAction -Toast $Text
+            param($EmpireAgentName, $ModuleName, $ModuleOptions)
+
+
+            ## GET EMPIRE CONFIGO
+            $ResourcesConfigJsonFile = '.\EmpireConfig.json'
+
+            if(Test-Path $ResourcesConfigJsonFile)
+            {
+                $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
+                $EmpireBox = $ResourcesEmpireConfig.empire_host
+                $EmpirePort = $ResourcesEmpireConfig.empire_port
+                $EmpireToken = $ResourcesEmpireConfig.empire_token
+            }
+
+
+            $Text = 'Executing Action: ' +  $ModuleName +' on: ' +$EmpireAgentName + " which lives on $EmpireBox"
+            
+            $EmpireModuleExeuction = .\Tools\Empire\ExecuteModuleOnAgent.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
+            New-UDInputAction -Toast $EmpireModuleExeuction
+        
         }      
 
     }

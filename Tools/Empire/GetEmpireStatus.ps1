@@ -26,6 +26,9 @@ $ConfigurationInformation = $ConfigurationInformation.config
 
 
 $ConfigurationInformationObject = [PSCustomObject]@{
+    empire_host = $EmpireBox
+    empire_port = $EmpirePort
+    empire_token = $EmpireToken
     api_username = $ConfigurationInformation.api_username
     install_path = $ConfigurationInformation.install_path
     version    = $ConfigurationInformation.version
