@@ -1,3 +1,27 @@
+function New-UDPreloader {
+    [CmdletBinding(DefaultParameterSetName = "indeterminate")]
+    param(
+        [Parameter(ParameterSetName = "determinate")]
+        [ValidateRange(0, 100)]
+        $PercentComplete
+        )
+    
+    New-UDElement -Tag "div" -Attributes @{
+        className = "progress"
+    } -Content {
+        $Attributes = @{
+            className = $PSCmdlet.ParameterSetName
+        }
+
+        if ($PSCmdlet.ParameterSetName -eq "determinate") {
+            $Attributes["style"] = @{
+                width = "$($PercentComplete)%"
+            }
+        }
+
+        New-UDElement -Tag "div" -Attributes $Attributes
+    }
+}
 
 
 function Start-BSDash {
@@ -208,22 +232,7 @@ function Start-BSDash {
             
     }
      
-    
-    $Global:ADDiscoveryUDPage = New-UDPage -Name "Active Directory - Discovery" -Icon sitemap -Content {
-    }
-
-    $Global:ADOperationsUDPage = New-UDPage -Name "Active Directory - Operations" -Icon sitemap -Content {
-    }
-
-    $Global:ADConfigurationUDPage = New-UDPage -Name "Active Directory - Config" -Icon sitemap -Content {
-    }
-
-    $Global:POSHkatzUDPage = New-UDPage -Name "PoshKatz - Operations" -Icon download -Content {
-    }
-
-
-    $Global:SprayOperationsUDPage = New-UDPage -Name "Spray Operations" -Icon spinner -Content {
-    }
+   
 
 
 
@@ -231,7 +240,7 @@ function Start-BSDash {
     ###### EMPIRE OPERATIONS!!!!!!!!!!!!!
 
     $Global:EmpireOperationsUDPage = New-UDPage -Name "Empire - Operations" -Icon empire -Content {
-
+  
         <#
          ## GET EMPIRE CONFIGO
          $ResourcesConfigJsonFile = '.\EmpireConfig.json'
@@ -297,9 +306,78 @@ function Start-BSDash {
             
             $EmpireModuleExeuction = .\Tools\Empire\ExecuteModuleOnAgent.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
             New-UDInputAction -Toast $EmpireModuleExeuction
-        
-        }      
 
+        } 
+        
+       
+
+
+    }
+
+
+    $Global:EmpireResultsUDPage = New-UDPage -Name "Empire - Results" -Icon empire -Content {
+        
+        New-UDLayout -Columns 1 {
+            New-UDHeading -Size 3 -Content {
+                New-UDIcon -Icon money
+                "    EMPIRE Agent Results"
+            } 
+            New-UDHeading -Text "Get Result Output Text from EMPIRE Modules" -Size 5 
+        }
+        
+        
+        ## GET AGENTS
+        $ResourcesAgentsJsonFile = '.\EmpireAgents.json'
+
+        if(Test-Path $ResourcesAgentsJsonFile)
+        {
+            $ResourcesAgentJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesAgentsJsonFile -raw)
+        }
+
+        New-UDInput -Title "Retrieve Results" -Id "AgentResultsRetrieval" -Content {
+            New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name
+        } -Endpoint {
+            param($EmpireAgentName)
+
+            ## GET EMPIRE CONFIGO
+            $ResourcesConfigJsonFile = '.\EmpireConfig.json'
+
+            if(Test-Path $ResourcesConfigJsonFile)
+            {
+                $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
+                $EmpireBox = $ResourcesEmpireConfig.empire_host
+                $EmpirePort = $ResourcesEmpireConfig.empire_port
+                $EmpireToken = $ResourcesEmpireConfig.empire_token
+            }
+
+            New-UDInputAction -Toast "Getting Results for Agent: $EmpireAgentName"
+
+            
+            Add-UDElement -ParentId "ExecutionResults2" -Content {
+                New-UDElement -Tag "li" -Content  {New-UDPreloader}
+            }            
+
+            $EmpireResults = .\Tools\Empire\GetEmpireAgentResults.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName
+            
+            Clear-UDElement -Id "ExecutionResults2"
+            ForEach($result in $EmpireResults)
+            {
+               
+
+                Add-UDElement -ParentId "ExecutionResults2" -Content {
+                    New-UDElement -Tag "li" -Content  {$result.results}
+                }
+
+                
+
+            }
+      
+        }
+
+        New-UDElement -Tag "ul" -Id "ExecutionResults2" -Content {
+            
+        }
+        
     }
 
 
@@ -314,16 +392,9 @@ function Start-BSDash {
             $Global:NetworkDiscoveryUDPage, 
             $Global:NetworkOperationsUDPage, 
             
-            $Global:ADDiscoveryUDPage, 
-            $Global:ADOperationsUDPage,
-            $Global:ADConfigurationUDPage,
-
-            $Global:SprayOperationsUDPage, 
-            
             $Global:EmpireOperationsUDPage,
+            $Global:EmpireResultsUDPage,
             $Global:EmpireConfigurationUDPage,
-
-            $Global:POSHkatzUDPage,
 
             $Global:AboutUDPage
             )
