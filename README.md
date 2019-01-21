@@ -21,13 +21,10 @@ BlueStrike
 2. Install PoshSSH.
     + PoshSSH is used to run SCP commands to extract agent artifacts.
 3. Setup Empire
-3. Start ./StartBlueStrike.ps1
-4. Follow the Steps on the Empire Configuration Page
+    + Run Empire with --rest command, feed the token to BlueStrike on the empire config page
+4. Start ./StartBlueStrike.ps1
+5. Follow the Steps on the Empire Configuration Page
+6. 
+     ![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
 
 
-## Empire Setup
-1. Clone a Copy of Empire to your Server
-2. Start Empire Rest API
-3. Deploy Agents...
-4. Run Empire with --rest command, feed the token to BlueStrike on the empire config page
-5. ![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
