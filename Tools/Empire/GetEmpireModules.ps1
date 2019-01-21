@@ -1,6 +1,6 @@
 Param(
     $EmpireBox = '192.168.200.108',
-    $EmpireToken = 'svcx1oa9ynrqy0pc089qs4s0askox1evhk3c9k6w',
+    $EmpireToken = 'ebrg7z9snihbp0lbfe9qs0fxtwwsm44fk3waffar',
     $EmpirePort = '1337'
 )
 

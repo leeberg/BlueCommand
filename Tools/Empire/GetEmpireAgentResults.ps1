@@ -2,9 +2,9 @@
 
 Param(
     $EmpireBox = '192.168.200.108',
-    $EmpireToken = 'y6v5vpa8cyze8iz2co7b0i4abtfxne90u3imq52e',
+    $EmpireToken = 'ebrg7z9snihbp0lbfe9qs0fxtwwsm44fk3waffar',
     $EmpirePort = '1337',
-    $AgentName = "MEHZGVRB"
+    $AgentName = "8BYZEAXN"
 )
 #[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 add-type @"

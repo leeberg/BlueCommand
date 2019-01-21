@@ -33,28 +33,57 @@ function Start-BSDash {
 
     $HomeUDPage = New-UDPage -Name "Home" -Icon home -Content {
             
-        <#
-            New-UDButton -Id "BTNDiscover" -Icon search -Floating -IconAlignment right -OnClick {                                 
-                $ButtonVar = Invoke-UDRedirect -Url  "/Discovery" 
+        New-UDRow -Columns {            
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title ""  -Content{
+                    New-UDButton -Id "BTN_GotoEmpireOperations" -Icon bomb -Text "Execute Strike" -OnClick {                                 
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Operations" 
+                    }
+                }
             }
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title "" -Content{
+                    New-UDButton -Id "BTN_GotoEmpireResults" -Icon money -Text "Empire Results" -OnClick {                                 
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Results" 
+                    }         
+                }
+            }   
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title "" -Content{
+                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Configuration" -OnClick {                                     
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
+                    }
+                }
+            }   
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title "" -Content{
+                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
+                    }
+                }     
+            }  
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title "" -Content{
+                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
+                    }
+                }     
+            }
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title "" -Content{
+                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
+                    }
+                }     
+            }   
 
-            New-UDButton -Id "BTNClient" -Icon laptop -Floating -IconAlignment right -OnClick {                                 
-                $ButtonVar = Invoke-UDRedirect -Url  "/Clients" 
-            }
 
-            New-UDButton -Id "BTNServer" -Icon server -Floating -IconAlignment right -OnClick {                                 
-                $ButtonVar = Invoke-UDRedirect -Url  "/Servers" 
-            }
-
-            New-UDButton -Id "BTNOperations" -Icon rocket -Floating -IconAlignment right -OnClick {                                 
-                $ButtonVar = Invoke-UDRedirect -Url  "/Operations" 
-            }
-
-            New-UDButton -Id "BTNHelp" -Icon question -Floating -IconAlignment right -OnClick {                                 
-                $ButtonVar = Invoke-UDRedirect -Url  "/Help" 
-            }
+            
+           
+            
+        }
         
-        #>
+        
         
             New-UDGrid -Title "Known Resources" -Headers @("HostName", "IPv4", "Status","Computer","Note","Last") -Properties @("HostName", "IPv4", "Status","Computer","Note","Last") -Endpoint {
                 $JsonData = .\ReadResourceJson.ps1 
@@ -261,6 +290,8 @@ function Start-BSDash {
         #>
         ## GET AGENTS
         $ResourcesAgentsJsonFile = '.\EmpireAgents.json'
+        #$CurrentlySelectedAgent = "NULL"
+        $Session:CurrentlySelectedAgent = "NULL"
 
         if(Test-Path $ResourcesAgentsJsonFile)
         {
@@ -276,12 +307,93 @@ function Start-BSDash {
         }
 
         
+        
+        New-UDElement -Id "CurrentAgentUDElement" -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
+     
+        
+        New-UDInput -Title "Target Agent" -Id "AgentSelectionOperations"  -Content {
+            New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name -DefaultValue "NONE" -Placeholder "Select an Agent"
+        
+        } -Endpoint{
+            $Session:CurrentlySelectedAgent = $EmpireAgentName
+            Clear-UDElement -Id "CurrentAgentUDElement"
+            Add-UDElement -ParentId "CurrentAgentUDElement" -Content {
+                    New-UDElement -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
+            }
+            
+        }
 
-        New-UDGrid -Title "Empire Modules" -Headers @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -Properties @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -AutoRefresh -Endpoint {
-            $JsonData = .\ReadEmpireModules.ps1 
-            $JsonData | Out-UDGridData
+       
+        New-UDGrid -Title "Package Selection" -Headers @("Name", "Description", "Execute") -Properties @("Name", "Description", "Execute") -AutoRefresh -Endpoint {
+            $JsonModuleData = .\ReadEmpireModules.ps1 
+            $JsonModuleData | ForEach-Object {
+
+            [PSCustomObject]@{
+                Name = $_.Name
+                Description = $_.Description
+                Execute = New-UDButton -Text "Execute" -OnClick (New-UDEndpoint -Endpoint { 
+
+                    $EmpireAgentName = $ArgumentList[0]
+                    $ModuleName =  $ArgumentList[1]
+                    $ModuleDescription = $ArgumentList[2]
+                    
+                    Show-UDModal -Content {
+                        New-UDTable -Title "Strike Package Details" -Headers @("Name", "Description", "Agent") -Endpoint {
+                            @{
+                                'Name' = $ModuleName
+                                'Description' = $ModuleDescription
+                                'Agent' = $EmpireAgentName
+                            } | Out-UDTableData -Property @("Name", "Description", "Agent")
+                            
+                        }
+
+                        New-UDInput -Title "Execute Strike Package" -Id "AgentModuleOperations" -Content {
+                           
+                        } -Endpoint {
+                          
+                            ## GET EMPIRE CONFIGO
+                            $ResourcesConfigJsonFile = '.\EmpireConfig.json'
+                
+                            if(Test-Path $ResourcesConfigJsonFile)
+                            {
+                                $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
+                                $EmpireBox = $ResourcesEmpireConfig.empire_host
+                                $EmpirePort = $ResourcesEmpireConfig.empire_port
+                                $EmpireToken = $ResourcesEmpireConfig.empire_token
+                            }
+                
+                
+                            $Text = 'Executing Action: ' +  $ModuleName +' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
+                            $Text >> 'C:\Users\lee\git\bluestrike.txt'
+                            $EmpireModuleExeuction = .\Tools\Empire\ExecuteModuleOnAgent.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
+                            New-UDInputAction -Toast $EmpireModuleExeuction
+
+                            Clear-UDElement -Id "StrikePackageExecution"
+                            Add-UDElement -ParentId "StrikePackageExecution" -Content {
+                                    New-UDHtml -Markup '<b>STRIKE STATUS: <font size="3" color="red">EXECUTED</font></b>'
+                            }
+
+
+                           }
+
+
+                           New-UDElement -Id "StrikePackageExecution" -Tag "b" -Content  {"STRIKE STATUS: DEPLOYMENT READY"}
+     
+                        
+                    } 
+
+
+                } -ArgumentList $Session:CurrentlySelectedAgent, $_.Name, $_.Description)
+           }
+
+            } | Out-UDGridData
+            
+    
         }      
 
+      
+               
+        <#
         New-UDInput -Title "Execute Module" -Id "AgentModuleOperations" -Content {
             New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name
             New-UDInputField -Type 'select' -Name 'ModuleName' -Values $ResourcesModuleJsonContent.name
@@ -307,7 +419,8 @@ function Start-BSDash {
             $EmpireModuleExeuction = .\Tools\Empire\ExecuteModuleOnAgent.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
             New-UDInputAction -Toast $EmpireModuleExeuction
 
-        } 
+        }
+        #> 
         
        
 
