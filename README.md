@@ -20,6 +20,7 @@ BlueStrike
 1. Install Universal Dashboard - Install-Module UniversalDashboard -AccecptLicense
 2. Install PoshSSH.
     + PoshSSH is used to run SCP commands to extract agent artifacts.
+3. Setup SSH Key-Based Authentication on your Empire Server
 3. Setup Empire
     + Run Empire with --rest command, feed the token to BlueStrike on the empire config page
 4. Start ./StartBlueStrike.ps1

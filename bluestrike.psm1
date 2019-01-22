@@ -33,10 +33,27 @@ function Start-BSDash {
 
     $HomeUDPage = New-UDPage -Name "Home" -Icon home -Content {
             
-        New-UDRow -Columns {            
+        New-UDRow -Columns {
+            
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title "" -Content{
+                    New-UDButton -Id "BTN_GotoNetworkDiscovery" -Icon search -Text "Network Disc" -OnClick {                                     
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Network---Discovery" 
+                    }
+                }     
+            }
+            
+            New-UDColumn -Size 2 {         
+                New-UDCard -Id 'crd_home1' -Title "" -Content{
+                    New-UDButton -Id "BTN_GotoNetworkOperations" -Icon expand -Text "Network Ops" -OnClick {                                     
+                        $ButtonVar = Invoke-UDRedirect -Url  "/Network--Operations" 
+                    }
+                }     
+            } 
+
             New-UDColumn -Size 2 {         
                 New-UDCard -Id 'crd_home1' -Title ""  -Content{
-                    New-UDButton -Id "BTN_GotoEmpireOperations" -Icon bomb -Text "Execute Strike" -OnClick {                                 
+                    New-UDButton -Id "BTN_GotoEmpireOperations" -Icon plane -Text "Empire Strike" -OnClick {                                 
                         $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Operations" 
                     }
                 }
@@ -50,47 +67,109 @@ function Start-BSDash {
             }   
             New-UDColumn -Size 2 {         
                 New-UDCard -Id 'crd_home1' -Title "" -Content{
-                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Configuration" -OnClick {                                     
+                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
                         $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
                     }
                 }
             }   
+             
             New-UDColumn -Size 2 {         
                 New-UDCard -Id 'crd_home1' -Title "" -Content{
-                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
-                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
-                    }
-                }     
-            }  
-            New-UDColumn -Size 2 {         
-                New-UDCard -Id 'crd_home1' -Title "" -Content{
-                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
-                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
+                    New-UDButton -Id "BTN_GotoHelpAbout" -Icon question -Text "Help" -OnClick {                                     
+                        $ButtonVar = Invoke-UDRedirect -Url  "/About" 
                     }
                 }     
             }
-            New-UDColumn -Size 2 {         
-                New-UDCard -Id 'crd_home1' -Title "" -Content{
-                    New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
-                        $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
-                    }
-                }     
-            }   
-
+ 
 
             
            
             
         }
         
+
+        ### CARD COUNTS
+        $EmpireAgentsJsonData = .\ReadEmpireAgents.ps1 
+        $EmpireModulesJsonData = .\ReadEmpireModules.ps1 
+        $NetworkResourcesJsonData = .\ReadResourceJson.ps1 
+
+        $NetworkResourcesCount = ($NetworkResourcesJsonData | Measure | Select-Object Count).Count
+        $EmpireAgentsCount = ($EmpireAgentsJsonData | Measure | Select-Object Count).Count
+        $EmpireModuleCount = $EmpireModulesJsonData.Count
+
+
+
+        New-UDRow -Columns {
+            
+
+            New-UDColumn -Size 2 {    
+
+                New-UDCounter -Title "Network Resources Discovered" -Endpoint {
+                    $NetworkResourcesCount | ConvertTo-Json
+                } -FontColor "black"
+
+            }
+
+            New-UDColumn -Size 2 {    
+
+                New-UDCounter -Title "Modules Currently Loaded" -Endpoint {
+                    $EmpireModuleCount | ConvertTo-Json
+                } -FontColor "black"
+
+            }
+            
+            New-UDColumn -Size 2 {    
+
+                New-UDCounter -Title "Agents Currently Active" -Endpoint {
+                    $EmpireAgentsCount | ConvertTo-Json
+                } -FontColor "black"
+
+            }
+
+            New-UDColumn -Size 2 {    
+
+                New-UDCounter -Title "Strike Packages Deployed" -Endpoint {
+                    18 | ConvertTo-Json
+                } -FontColor "black"
+
+            }
+
+            New-UDColumn -Size 2 {    
+
+                New-UDCounter -Title "Agent Results Downloads" -Endpoint {
+                    5 | ConvertTo-Json
+                } -FontColor "black"
+
+            }
+
+
+            New-UDColumn -Size 2 {    
+
+                New-UDCard -Title 'Operation Status' -Content {
+                    New-UDParagraph -Text 'ACTIVE
+                    '
+                } 
+            
+
+            }
+
+
+
+
+           
+
+
+    
+        }
+
         
         
-            New-UDGrid -Title "Known Resources" -Headers @("HostName", "IPv4", "Status","Computer","Note","Last") -Properties @("HostName", "IPv4", "Status","Computer","Note","Last") -Endpoint {
+            New-UDGrid -Title "Known Resources" -Headers @("HostName", "IPv4", "Status","Computer") -Properties @("HostName", "IPv4", "Status","Computer") -Endpoint {
                 $JsonData = .\ReadResourceJson.ps1 
                 $JsonData | Out-UDGridData
             }
 
-            New-UDGrid -Title "Empire Agents" -Headers @("id", "name", "checkin_time","external_ip","hostname","internal_ip","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -Properties @("id", "name", "checkin_time","external_ip","hostname","internal_ip","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -AutoRefresh -Endpoint {
+            New-UDGrid -Title "Empire Agents" -Headers @("Name", "checkin_time","lastseen_time","external_ip","hostname","listener","OS","username") -Properties @("name", "checkin_time","lastseen_time","external_ip","hostname","listener","os_details","username") -AutoRefresh -Endpoint {
                 $JsonData = .\ReadEmpireAgents.ps1 
                 $JsonData | Out-UDGridData
             }  
@@ -435,7 +514,10 @@ function Start-BSDash {
                 New-UDIcon -Icon money
                 "    EMPIRE Agent Results"
             } 
-            New-UDHeading -Text "Get Result Output Text from EMPIRE Modules" -Size 5 
+           # New-UDHeading -Text "Get Result Output Text from EMPIRE Modules" -Size 6
+           # New-UDHeading -Text "First we Will SElect an Agent" -Size 6 
+           # New-UDHeading -Text "Second we will download with POSH-SSH" -Size 6 
+           # New-UDHeading -Text "Finally we will dump and parse the log" -Size 6 
         }
         
         
@@ -448,9 +530,18 @@ function Start-BSDash {
         }
 
         New-UDInput -Title "Retrieve Results" -Id "AgentResultsRetrieval" -Content {
-            New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name
+            New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name -DefaultValue "Null" -Placeholder "Select an Agent"
+            New-UDInputField -Type 'textbox' -Name 'DownloadFolder' -DefaultValue "C:\Downloads" -Placeholder "Set Agent Download Location"
+
         } -Endpoint {
-            param($EmpireAgentName)
+            param($EmpireAgentName, $DownloadFolder)
+            
+          
+
+            if($DownloadFolder -notlike '*\')
+            {
+                $DownloadFolder =  $DownloadFolder + '\'
+            }
 
             ## GET EMPIRE CONFIGO
             $ResourcesConfigJsonFile = '.\EmpireConfig.json'
@@ -465,23 +556,54 @@ function Start-BSDash {
 
             New-UDInputAction -Toast "Getting Results for Agent: $EmpireAgentName"
 
+            # EXECUTE DOWNLOAD LOGS FOR AGENT
+            $AgentLogDownloadStatus = .\Tools\Empire\Get-AgentDownloads.ps1 -EmpireAgentName $EmpireAgentName -EmpireBox $EmpireBox -DownloadFolder $DownloadFolder
             
+
+            # READ DOWNLOADED LOGS FOR AGENT
+            $JsonAgentLogDetails = .\Tools\Empire\Get-LocalAgentLogDetails.ps1 -EmpireAgentName $EmpireAgentName -DownloadFolder $DownloadFolder
+            
+
+            $LocalAgentDownloadFolder = $DownloadFolder + $EmpireAgentName
+
+
+        
             Add-UDElement -ParentId "ExecutionResults2" -Content {
                 New-UDElement -Tag "li" -Content  {New-UDPreloader}
             }            
 
-            $EmpireResults = .\Tools\Empire\GetEmpireAgentResults.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName
+            #$EmpireResults = .\Tools\Empire\GetEmpireAgentResults.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName
             
             Clear-UDElement -Id "ExecutionResults2"
-            ForEach($result in $EmpireResults)
+            Clear-UDElement -Id "ButtonOpenLoot"
+            
+
+            ### ADD RESULTS
+            ForEach($result in $JsonAgentLogDetails)
             {
                
-
                 Add-UDElement -ParentId "ExecutionResults2" -Content {
-                    New-UDElement -Tag "li" -Content  {$result.results}
+                 #   New-UDElement -Tag "li" -Content  {$result.TimeStamp + $result.Message}
                 }
 
-                
+            }
+
+            
+            
+            Show-UDModal -Content {
+                New-UDHeading -Size 4 -Text "Agent Results Download"
+                New-UDHeading -Size 6 -Text "Agent: $EmpireAgentName Results downloaded to: $LocalAgentDownloadFolder"
+                #New-UDHtml -Markup ('<b>Agent: '+$EmpireAgentName+'Results</b> downloaded to: '+ $LocalAgentDownloadFolder)
+                New-UDTable -Title "Agent Results" -Headers @("TimeStamp", "Message") -Style striped -Endpoint {
+                    $JsonAgentLogDetails | Out-UDTableData -Property @("TimeStamp", "Message")
+                    
+                }
+            }
+
+            ## ADD BUTTON
+            Add-UDElement -ParentId "ButtonOpenLoot" -Content {
+                   
+                # New-UDHtml -Markup ('<a href="file://'+$LocalAgentDownloadFolder+'" id="btnGetLoot" class="btn">Open Loot</a>')
 
             }
       
@@ -490,6 +612,12 @@ function Start-BSDash {
         New-UDElement -Tag "ul" -Id "ExecutionResults2" -Content {
             
         }
+
+        New-UDElement -Tag "ul" -Id "ButtonOpenLoot" -Content {
+            
+        }
+        
+
         
     }
 
