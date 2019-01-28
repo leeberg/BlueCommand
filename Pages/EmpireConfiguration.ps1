@@ -7,8 +7,13 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
         $ResourcesJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesJsonFile -raw)
     }
 
+    New-UDLayout -Columns 1 {
+        New-UDHeading -Size 4 -Content {
+            "Connect to New Server"
+        } 
+    }
 
-    New-UDInput -Title "Empire Configuration" -Id "EmpireConfiguration" -Content {
+    New-UDInput -Title "Connect to Empire Server" -Id "EmpireConfiguration" -SubmitText "Connect" -Content {
         New-UDInputField -Type 'select' -Name 'EmpireComputer' -Values $ResourcesJsonContent.Hostname
         New-UDInputField -Type 'textarea' -Name 'EmpirePort' -DefaultValue '1337'
         New-UDInputField -Type 'textarea' -Name 'EmpireToken' -DefaultValue '6jq0or8kcawfi4vjyktehwuqugv7uhxes04mrqkq'
@@ -47,7 +52,17 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
     }
 
-    New-UDGrid -Title "Empire Config" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
+    New-UDLayout -Columns 1 {
+        New-UDHeading -Size 4 -Content {
+            "Existing Configuartion"
+        } 
+    
+    }
+    
+    
+
+
+    New-UDGrid -Title "Empire Instace" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
         $JsonData = .\ReadEmpireConfig.ps1 
         If ($JsonData.version)
         {

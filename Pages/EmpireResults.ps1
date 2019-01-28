@@ -1,11 +1,11 @@
 New-UDPage -Name "Empire - Results" -Icon empire -Content {
         
     New-UDLayout -Columns 1 {
-        New-UDHeading -Size 3 -Content {
+        New-UDHeading -Size 4 -Content {
             New-UDIcon -Icon money
             "    EMPIRE Agent Results"
         } 
-       # New-UDHeading -Text "Get Result Output Text from EMPIRE Modules" -Size 6
+       New-UDHeading -Text "Choose Agent and Download Location" -Size 6
        # New-UDHeading -Text "First we Will SElect an Agent" -Size 6 
        # New-UDHeading -Text "Second we will download with POSH-SSH" -Size 6 
        # New-UDHeading -Text "Finally we will dump and parse the log" -Size 6 

@@ -12,7 +12,7 @@ if(Test-Path $ResourcesJsonFile)
         #Propertize the Module Objects
         $ModuleOptionsObject = @()
         $ModuleOptions = $Module.options 
-        
+        $Module.options 
         $ModuleOptionsNotes = $ModuleOptions | Get-Member -MemberType NoteProperty
         ForEach($Note in $ModuleOptionsNotes)
         {
@@ -23,17 +23,8 @@ if(Test-Path $ResourcesJsonFile)
         }
 
 
-        $Data = $Data +[PSCustomObject]@{
-            Name=($Module.name);
-            Author=($Module.Author);
-            Description=($Module.Description);
-            Language=($Module.Language);
-            NeedsAdmin=($Module.NeedsAdmin);
-            OpsecSafe=($Module.OpsecSafe);
-            Options=($ModuleOptionsObject);
-        }
     }
 
 }
 
-return $Data
+
