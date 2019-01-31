@@ -3,6 +3,7 @@ Tools/DomainPasswordSpray/DomainPasswordSpay.psd1
 Tools/DomainPasswordSpray/DomainPasswordSpray.psm1
 scan.json
 scratch.ps1
-EmpireAgents.json
-EmpireConfig.json
-EmpireModules.json
+Data/EmpireAgents.json
+Data/EmpireConfig.json
+Data/EmpireModules.json
+Data/NetworkScan.json

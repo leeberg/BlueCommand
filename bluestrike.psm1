@@ -35,23 +35,10 @@ function Start-BSDash {
     Get-ChildItem (Join-Path $PSScriptRoot "pages") -Exclude "home.ps1" | ForEach-Object {
         $Pages += . $_.FullName
     }
-
+    
     Start-UDDashboard -Port $Port -Content {
-        New-UDDashboard -Title "BlueStrike" -Pages $Pages <#@(
-            $HomeUDPage, 
-            
-            $Global:NetworkDiscoveryUDPage, 
-            $Global:NetworkOperationsUDPage, 
-            
-            $Global:EmpireOperationsUDPage,
-            $Global:EmpireResultsUDPage,
-            $Global:EmpireConfigurationUDPage,
-
-            $Global:AboutUDPage
-            ) #>
+        New-UDDashboard -Title "BlueStrike" -Pages $Pages
     }
-
-
 
 }
 

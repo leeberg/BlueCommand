@@ -21,16 +21,9 @@ New-UDPage -Name "Network - Discovery" -Icon search -Content {
         
             )
 
-            # Save to JSON File
-
-            if(Test-Path '.\scan.json')
-            {
-                # Clear Existings
-                Clear-Content '.\scan.json'
-            }
-            
-            $NetworkScanResults | Select-Object -Property Hostname,@{Name="IPv4"; Expression = {$_.IPv4Address.IPAddressToString}},Status | ConvertTo-Json >> '.\scan.json'
-
+            # Save to JSON File            
+            $NetworkScanResults | Select-Object -Property Hostname,@{Name="IPv4"; Expression = {$_.IPv4Address.IPAddressToString}},Status
+            Write-BSNetworkScanData -BSObjectData $NetworkScanResults
         }
         else {
             New-UDInputAction -Toast "Fill all required fields!"

@@ -21,34 +21,14 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
         param($EmpireComputer, $EmpirePort, $EmpireToken)
         New-UDInputAction -Toast "Retrieving Empire Configurations!"
         
-        if(Test-Path '.\EmpireConfig.json')
-        {
-            # Clear Existings
-            Clear-Content '.\EmpireConfig.json'
-        }
-
         $EmpireConfiguration = .\Tools\Empire\GetEmpireStatus.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
-        $EmpireConfiguration | ConvertTo-Json >> '.\EmpireConfig.json'
+        Write-BSEmpireConfigData -BSObject $EmpireConfiguration
         
-        #AGENTS
-        if(Test-Path '.\EmpireAgents.json')
-        {
-            # Clear Existings
-            Clear-Content '.\EmpireAgents.json'
-        }
-
         $EmpireAgents = .\Tools\Empire\GetEmpireAgents.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
-        $EmpireAgents | ConvertTo-Json >> '.\EmpireAgents.json'
+        Write-BSEmpireAgentData -BSObject $EmpireAgents
 
-        #MODULES
-        if(Test-Path '.\EmpireModules.json')
-        {
-            # Clear Existings
-            Clear-Content '.\EmpireModules.json'
-        }
-
-        $EmpireAgents = .\Tools\Empire\GetEmpireModules.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
-        $EmpireAgents | ConvertTo-Json >> '.\EmpireModules.json'
+        $EmpireModules = .\Tools\Empire\GetEmpireModules.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
+        Write-BSEmpireModuleData -BSObject $EmpireModules
 
     }
 
