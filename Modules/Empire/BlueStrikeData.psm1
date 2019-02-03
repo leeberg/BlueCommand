@@ -4,6 +4,8 @@ $EmpireModuleFilePath = 'Data\EmpireModules.json'
 $EmpireAgentFilePath = 'Data\EmpireAgents.json'
 $NetworkScanFilePath = 'Data\NetworkScan.json'
 
+
+
 Function Get-BSJSONObject 
 {
 Param(
@@ -12,8 +14,21 @@ Param(
 
     if(Test-Path($BSFile))
     {
-        $JsonObject = ConvertFrom-Json -InputObject (Get-Content $BSFile -raw)
-        return $JsonObject
+        $FileContents = Get-Childitem -file $BSFile  
+        $Length = $FileContents.Length
+
+        iF($Length -ne 0)
+        {
+            $JsonObject = ConvertFrom-Json -InputObject (Get-Content $BSFile -raw)
+            return $JsonObject
+        }
+        else 
+        {
+            # Empty File
+            return $null
+        }
+
+        
     }
     else 
     {
@@ -81,6 +96,10 @@ Function Get-BSEmpireModuleData()
 {
     
     $Data = @()
+    $Options = @()
+    $FirstPartOfDefinition = '^.*=@{Description='
+    $SecondPartOfDefinition = ';.*;.*Value=.*}'
+
     $ResourcesJsonContent = Get-BSJSONObject -BSFile $EmpireModuleFilePath
 
     #### Data Stuff
@@ -94,9 +113,14 @@ Function Get-BSEmpireModuleData()
         $ModuleOptionsNotes = $ModuleOptions | Get-Member -MemberType NoteProperty
         ForEach($Note in $ModuleOptionsNotes)
         {
+
+            $OptionDefinitionFormatted = $Note.Definition
+            $OptionDefinitionFormatted = $OptionDefinitionFormatted -replace $FirstPartOfDefinition," "
+            $OptionDefinitionFormatted = $OptionDefinitionFormatted -replace $SecondPartOfDefinition,""
+
             $ModuleOptionsObject = $ModuleOptionsObject +[PSCustomObject]@{
                 Name=($Note.Name);
-                Definition=($Note.Definition);
+                Definition=($OptionDefinitionFormatted);
             }
         }
 
@@ -146,7 +170,7 @@ Param(
     if(Test-Path($BSFile))
     {
          # Clear Existings
-        Clear-Content '.\EmpireAgents.json'
+        Clear-Content $BSFile -Force
     }
     else 
     {

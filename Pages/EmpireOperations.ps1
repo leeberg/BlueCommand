@@ -76,7 +76,7 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
                         }
 
                         New-UDInput -Title "Execute Strike Package" -Id "AgentModuleOperations" -SubmitText "Execute" -Content {
-                        
+                            New-UDInputField -Type 'textbox' -Name 'Options'
                         } -Endpoint {
                         
                             ## GET EMPIRE CONFIGO
