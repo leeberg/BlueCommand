@@ -1,3 +1,5 @@
+
+
 New-UDPage -Name "Home" -Icon home -Content {
             
     New-UDRow -Columns {
@@ -56,14 +58,14 @@ New-UDPage -Name "Home" -Icon home -Content {
     
 
     ### CARD COUNTS
-    $EmpireAgentsJsonData = .\ReadEmpireAgents.ps1 
-    $EmpireModulesJsonData = .\ReadEmpireModules.ps1 
-    $NetworkResourcesJsonData = .\ReadResourceJson.ps1 
+    $EmpireAgentsJsonData = Get-BSEmpireAgentData
+    $EmpireModulesJsonData = Get-BSEmpireModuleData
+    $NetworkResourcesJsonData = Get-BSNetworkScanData
 
     $NetworkResourcesCount = ($NetworkResourcesJsonData | Measure | Select-Object Count).Count
     $EmpireAgentsCount = ($EmpireAgentsJsonData | Measure | Select-Object Count).Count
     $EmpireModuleCount = $EmpireModulesJsonData.Count
-
+    
 
 
     New-UDRow -Columns {
@@ -124,18 +126,20 @@ New-UDPage -Name "Home" -Icon home -Content {
     }
 
     
-    
+    $JsonData = Get-BSNetworkScanData
     New-UDGrid -Title "Known Resources" -Headers @("HostName", "IPv4", "Status","Computer") -Properties @("HostName", "IPv4", "Status","Computer") -Endpoint {
-            $JsonData = .\ReadResourceJson.ps1 
+        
             $JsonData | Out-UDGridData
     }
 
+
+    $JsonData = Get-BSEmpireAgentData
     New-UDGrid -Title "Empire Agents" -Headers @("Name", "checkin_time","lastseen_time","external_ip","hostname","listener","OS","username") -Properties @("name", "checkin_time","lastseen_time","external_ip","hostname","listener","os_details","username") -AutoRefresh -Endpoint {
-            $JsonData = .\ReadEmpireAgents.ps1 
+            
             $JsonData | Out-UDGridData
     }  
     
-            
+    #>      
         
     
 }

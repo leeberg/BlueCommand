@@ -1,33 +1,4 @@
-function New-UDPreloader {
-    [CmdletBinding(DefaultParameterSetName = "indeterminate")]
-    param(
-        [Parameter(ParameterSetName = "determinate")]
-        [ValidateRange(0, 100)]
-        $PercentComplete
-        )
-    
-    New-UDElement -Tag "div" -Attributes @{
-        className = "progress"
-    } -Content {
-        $Attributes = @{
-            className = $PSCmdlet.ParameterSetName
-        }
-
-        if ($PSCmdlet.ParameterSetName -eq "determinate") {
-            $Attributes["style"] = @{
-                width = "$($PercentComplete)%"
-            }
-        }
-
-        New-UDElement -Tag "div" -Attributes $Attributes
-    }
-}
-
-
 function Start-BSDash {
-
-    #### SETUP STUFF
-    param($Port = 10000) 
         
     $Pages = @()
     $Pages += . (Join-Path $PSScriptRoot "pages\home.ps1")
@@ -36,9 +7,9 @@ function Start-BSDash {
         $Pages += . $_.FullName
     }
     
-    Start-UDDashboard -Port $Port -Content {
-        New-UDDashboard -Title "BlueStrike" -Pages $Pages
-    }
+    $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueStrikeData.psm1", "Modules\Empire\BlueStrikeEmpire.psm1")
+
+    $Dashboard = New-UDDashboard -Title "BlueStrike" -Pages $Pages -EndpointInitialization $BSEndpoints
+    Start-UDDashboard -Dashboard $Dashboard -Port 10000
 
 }
-

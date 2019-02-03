@@ -27,7 +27,7 @@
     CompanyName = 'Berg Consulting'
     
     # Copyright statement for this module
-    Copyright = '(c) 2018 Lee Berg. All rights reserved.'
+    Copyright = '(c) 2019 Lee Berg. All rights reserved.'
     
     # Description of the functionality provided by this module
     Description = 'A sec tool built on Universal Dashboard.'

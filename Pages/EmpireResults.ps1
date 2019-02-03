@@ -1,3 +1,11 @@
+$EmpireAgents = Get-BSEmpireAgentData
+$EmpireModules = Get-BSEmpireModuleData
+$EmpireConfiguration = Get-BSEmpireConfigData
+                            
+$EmpireBox = $EmpireConfiguration.empire_host
+$EmpirePort = $EmpireConfiguration.empire_port
+$EmpireToken = $EmpireConfiguration.empire_token
+
 New-UDPage -Name "Empire - Results" -Icon empire -Content {
         
     New-UDLayout -Columns 1 {
@@ -11,17 +19,10 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
        # New-UDHeading -Text "Finally we will dump and parse the log" -Size 6 
     }
     
-    
-    ## GET AGENTS
-    $ResourcesAgentsJsonFile = '.\EmpireAgents.json'
 
-    if(Test-Path $ResourcesAgentsJsonFile)
-    {
-        $ResourcesAgentJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesAgentsJsonFile -raw)
-    }
 
     New-UDInput -Title "Retrieve Results" -Id "AgentResultsRetrieval" -Content {
-        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name -DefaultValue "Null" -Placeholder "Select an Agent"
+        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue "Null" -Placeholder "Select an Agent"
         New-UDInputField -Type 'textbox' -Name 'DownloadFolder' -DefaultValue "C:\Downloads" -Placeholder "Set Agent Download Location"
 
     } -Endpoint {
@@ -34,25 +35,14 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
             $DownloadFolder =  $DownloadFolder + '\'
         }
 
-        ## GET EMPIRE CONFIGO
-        $ResourcesConfigJsonFile = '.\EmpireConfig.json'
-
-        if(Test-Path $ResourcesConfigJsonFile)
-        {
-            $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
-            $EmpireBox = $ResourcesEmpireConfig.empire_host
-            $EmpirePort = $ResourcesEmpireConfig.empire_port
-            $EmpireToken = $ResourcesEmpireConfig.empire_token
-        }
-
-        New-UDInputAction -Toast "Getting Results for Agent: $EmpireAgentName"
+        New-UDInputAction -Toast "Getting Results for Ag ent: $EmpireAgentName"
 
         # EXECUTE DOWNLOAD LOGS FOR AGENT
-        $AgentLogDownloadStatus = .\Tools\Empire\Get-AgentDownloads.ps1 -EmpireAgentName $EmpireAgentName -EmpireBox $EmpireBox -DownloadFolder $DownloadFolder
+        $AgentLogDownloadStatus = Get-AgentDownloads -EmpireAgentName $EmpireAgentName -EmpireBox $EmpireBox -DownloadFolder $DownloadFolder
         
 
         # READ DOWNLOADED LOGS FOR AGENT
-        $JsonAgentLogDetails = .\Tools\Empire\Get-LocalAgentLogDetails.ps1 -EmpireAgentName $EmpireAgentName -DownloadFolder $DownloadFolder
+        $JsonAgentLogDetails = Get-LocalAgentLogDetails -EmpireAgentName $EmpireAgentName -DownloadFolder $DownloadFolder
         
 
         $LocalAgentDownloadFolder = $DownloadFolder + $EmpireAgentName

@@ -1,15 +1,10 @@
  # Operations Page
 New-UDPage -Name "Network - Operations" -Icon fighter_jet -RefreshInterval 5 -Content {
-        
-    $ResourcesJsonFile = '..\scan.json'
-
-    if(Test-Path $ResourcesJsonFile)
-    {
-        $ResourcesJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesJsonFile -raw)
-    }
+    
+    $NetworkResources = Get-BSNetworkScanData
     
     New-UDInput -Title "Operations" -Id "HackForm" -Content {
-        New-UDInputField -Type 'select' -Name 'Computer' -Values $ResourcesJsonContent.Hostname
+        New-UDInputField -Type 'select' -Name 'Computer' -Values $NetworkResources.Hostname
         New-UDInputField -Type 'select' -Name 'Operation' -Values @("Ping", "Nuke", "RDP", "SSH", "NMAP") -DefaultValue "Ping"
         New-UDInputField -Type 'textarea' -Name 'AdditionalNotes' -Placeholder 'Additional Notes'
     } -Endpoint {

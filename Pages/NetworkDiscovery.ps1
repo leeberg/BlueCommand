@@ -10,7 +10,9 @@ New-UDPage -Name "Network - Discovery" -Icon search -Content {
         if (($StartAddress -ne '') -and ($EndAddress -ne ''))
         {
             # Do a IPV4 Scan
-            $NetworkScanResults = .\Tools\NetworkScan\IPv4NetworkScan.ps1 -StartIPv4Address $StartAddress -EndIPv4Address $EndAddress
+            #$StartAddress = '192.168.200.1'
+            #$EndAddress = '192.168.200.255'
+            $NetworkScanResults = .\Modules\NetworkScan\IPv4NetworkScan.ps1 -StartIPv4Address $StartAddress -EndIPv4Address $EndAddress
 
             # Output a new Grid based on that info
             New-UDInputAction -Content @(

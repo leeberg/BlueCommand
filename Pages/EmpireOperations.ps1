@@ -1,42 +1,10 @@
 New-UDPage -Name "Empire - Operations" -Icon empire -Content {
   
-    <#
-     ## GET EMPIRE CONFIGO
-     $ResourcesConfigJsonFile = '.\EmpireConfig.json'
 
-     if(Test-Path $ResourcesConfigJsonFile)
-     {
-         $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
-         $EmpireBox = $ResourcesEmpireConfig.empire_host
-         $EmpirePort = $ResourcesEmpireConfig.empire_port
-         $EmpireToken = $ResourcesEmpireConfig.empire_token
-     }
-    
-     New-UDGrid -Title "Empire Config" -Headers @("empire_host", "empire_port", "empire_token", "version", "api_username", "install_path") -Properties @("empire_host", "empire_port", "empire_token", "version", "api_username", "install_path") -AutoRefresh -Endpoint {
-        $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
-        $ResourcesEmpireConfig | Out-UDGridData
-    }
-
-    #>
-    ## GET AGENTS
-    $ResourcesAgentsJsonFile = '.\EmpireAgents.json'
-    #$CurrentlySelectedAgent = "NULL"
     $Session:CurrentlySelectedAgent = "NULL"
-
-    if(Test-Path $ResourcesAgentsJsonFile)
-    {
-        $ResourcesAgentJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesAgentsJsonFile -raw)
-    }
-
-    ## GET LISTS OF MODULES
-    $ResourcesModulesJsonFile = '.\EmpireModules.json'
-
-    if(Test-Path $ResourcesModulesJsonFile)
-    {
-        $ResourcesModuleJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesModulesJsonFile -raw)
-    }
    
-
+    $EmpireAgents = Get-BSEmpireAgentData
+    $EmpireModules = Get-BSEmpireModuleData
 
     #### Loading Done
     
@@ -51,10 +19,10 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
     
     New-UDElement -Id "CurrentAgentUDElement" -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
  
-    $FirstAgentName = ($ResourcesAgentJsonContent | Select-Object -First 1 -Property 'name').name
+    $FirstAgentName = ($EmpireAgents | Select-Object -First 1 -Property 'name').name
     
     New-UDInput -Title "Target Agent" -Id "AgentSelectionOperations" -SubmitText "Confirm" -Content {
-        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name -DefaultValue $FirstAgentName -Placeholder "Select an Agent"
+        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue $FirstAgentName -Placeholder "Select an Agent"
     
     } -Endpoint{
         if($EmpireAgentName)
@@ -78,8 +46,7 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
 
     #### Module "Package" Selection Box - With Boxes!
     New-UDGrid -Title "Package Selection" -Headers @("Name", "Description", " ") -Properties @("Name", "Description", "Execute") -AutoRefresh -Endpoint {
-        $JsonModuleData = .\ReadEmpireModules.ps1 
-        $JsonModuleData | ForEach-Object {
+        $EmpireModules  | ForEach-Object {
 
         [PSCustomObject]@{
             Name = $_.Name
@@ -113,20 +80,16 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
                         } -Endpoint {
                         
                             ## GET EMPIRE CONFIGO
-                            $ResourcesConfigJsonFile = '.\EmpireConfig.json'
-                
-                            if(Test-Path $ResourcesConfigJsonFile)
-                            {
-                                $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
-                                $EmpireBox = $ResourcesEmpireConfig.empire_host
-                                $EmpirePort = $ResourcesEmpireConfig.empire_port
-                                $EmpireToken = $ResourcesEmpireConfig.empire_token
-                            }
-                
-                
+                            
+                            $EmpireConfiguration = Get-BSEmpireConfigData
+                            
+                            $EmpireBox = $EmpireConfiguration.empire_host
+                            $EmpirePort = $EmpireConfiguration.empire_port
+                            $EmpireToken = $EmpireConfiguration.empire_token
+
                             $Text = 'Executing Action: ' +  $ModuleName +' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
                             
-                            $EmpireModuleExeuction = .\Tools\Empire\ExecuteModuleOnAgent.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
+                            $EmpireModuleExeuction =  Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
                             New-UDInputAction -Toast $EmpireModuleExeuction
 
                             Clear-UDElement -Id "StrikePackageExecution"
@@ -159,39 +122,6 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
         
 
     }      
-
-  
-           
-    <#
-    New-UDInput -Title "Execute Module" -Id "AgentModuleOperations" -Content {
-        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $ResourcesAgentJsonContent.name
-        New-UDInputField -Type 'select' -Name 'ModuleName' -Values $ResourcesModuleJsonContent.name
-        New-UDInputField -Type 'textbox' -Name 'ModuleOptions'
-    } -Endpoint {
-        param($EmpireAgentName, $ModuleName, $ModuleOptions)
-
-
-        ## GET EMPIRE CONFIGO
-        $ResourcesConfigJsonFile = '.\EmpireConfig.json'
-
-        if(Test-Path $ResourcesConfigJsonFile)
-        {
-            $ResourcesEmpireConfig = ConvertFrom-Json -InputObject (Get-Content $ResourcesConfigJsonFile -raw)
-            $EmpireBox = $ResourcesEmpireConfig.empire_host
-            $EmpirePort = $ResourcesEmpireConfig.empire_port
-            $EmpireToken = $ResourcesEmpireConfig.empire_token
-        }
-
-
-        $Text = 'Executing Action: ' +  $ModuleName +' on: ' +$EmpireAgentName + " which lives on $EmpireBox"
-        
-        $EmpireModuleExeuction = .\Tools\Empire\ExecuteModuleOnAgent.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
-        New-UDInputAction -Toast $EmpireModuleExeuction
-
-    }
-    #> 
-    
-   
 
 
 }

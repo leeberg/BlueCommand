@@ -1,11 +1,6 @@
 New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
-    $ResourcesJsonFile = '..\scan.json'
-
-    if(Test-Path $ResourcesJsonFile)
-    {
-        $ResourcesJsonContent = ConvertFrom-Json -InputObject (Get-Content $ResourcesJsonFile -raw)
-    }
+    $ResourcesJsonFile = Get-BSEmpireConfigData
 
     New-UDLayout -Columns 1 {
         New-UDHeading -Size 4 -Content {
@@ -21,13 +16,13 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
         param($EmpireComputer, $EmpirePort, $EmpireToken)
         New-UDInputAction -Toast "Retrieving Empire Configurations!"
         
-        $EmpireConfiguration = .\Tools\Empire\GetEmpireStatus.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
+        $EmpireConfiguration = Get-EmpireStatus -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
         Write-BSEmpireConfigData -BSObject $EmpireConfiguration
         
-        $EmpireAgents = .\Tools\Empire\GetEmpireAgents.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
+        $EmpireAgents = Get-EmpireAgents -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
         Write-BSEmpireAgentData -BSObject $EmpireAgents
 
-        $EmpireModules = .\Tools\Empire\GetEmpireModules.ps1 -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
+        $EmpireModules = Get-EmpireModules -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
         Write-BSEmpireModuleData -BSObject $EmpireModules
 
     }
@@ -43,7 +38,7 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
 
     New-UDGrid -Title "Empire Instace" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
-        $JsonData = .\ReadEmpireConfig.ps1 
+        $JsonData = Get-BSEmpireConfigData
         If ($JsonData.version)
         {
             $Text =  'Empire - Version: ' + ($JsonData.version) +' - User: ' + ($JsonData.api_username)  + ' - Installed: ' + ($JsonData.install_path)    
@@ -57,12 +52,12 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
         
     New-UDGrid -Title "Empire Agents" -Headers @("id", "name", "checkin_time","external_ip","hostname","internal_ip","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -Properties @("id", "name", "checkin_time","external_ip","hostname","internal_ip","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -AutoRefresh -Endpoint {
-        $JsonData = .\ReadEmpireAgents.ps1 
+        $JsonData = Get-BSEmpireAgentData
         $JsonData | Out-UDGridData
     }        
 
     New-UDGrid -Title "Empire Modules" -Headers @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -Properties @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -AutoRefresh -Endpoint {
-        $JsonData = .\ReadEmpireModules.ps1 
+        $JsonData = Get-BSEmpireModuleData
         $JsonData | Out-UDGridData
     }      
     

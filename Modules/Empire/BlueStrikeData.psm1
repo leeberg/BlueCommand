@@ -1,7 +1,7 @@
 
 $EmpireConfigFilePath = 'Data\EmpireConfig.json'
-$EmpireModuleFilePath = 'Data\EmpireConfig.json'
-$EmpireAgentFilePath = 'Data\EmpireConfig.json'
+$EmpireModuleFilePath = 'Data\EmpireModules.json'
+$EmpireAgentFilePath = 'Data\EmpireAgents.json'
 $NetworkScanFilePath = 'Data\NetworkScan.json'
 
 Function Get-BSJSONObject 
@@ -62,6 +62,9 @@ Function Get-BSEmpireConfigData()
     foreach($Resource in $ResourcesJsonContent)
     {
         $Data = $Data +[PSCustomObject]@{
+            empire_host=($Resource.empire_host);
+            empire_port=($Resource.empire_port);
+            empire_token=($Resource.empire_token);
             api_username=($Resource.api_username);
             install_path=($Resource.install_path);
             version=($Resource.version);
@@ -165,6 +168,20 @@ $BSObjectData | ConvertTo-Json | Out-File $BSFile -Append
 }
 
 
+Function Write-BSObjectToJSON
+{
+Param (
+    [Parameter(Mandatory=$true)] $BSFile = '',
+    [Parameter(Mandatory=$true)] $BSObjectData
+)
+
+$BSObjectData | ConvertTo-Json | Out-File $BSFile -Append
+
+
+}
+
+
+
 
 Function Write-BSEmpireAgentData
 {
@@ -209,7 +226,6 @@ Param (
     $BSObjectData        
 )
     Clear-BSJON -BSFile $NetworkScanFilePath
-    $BSObjectData = $BSObjectData | ConvertTo-JSON
     Write-BSJSON -BSFile $NetworkScanFilePath -BSObjectData $BSObjectData
     
 }
