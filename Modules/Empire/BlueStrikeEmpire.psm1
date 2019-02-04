@@ -63,6 +63,7 @@ function Start-BSEmpireModuleOnAgent
 
     $moduleURI = "https://$EmpireBox`:$EmpirePort/api/modules/"+$ModuleName+"?token=$EmpireToken"
     $PostBody = "{`"Agent`":`"$AgentName`"}"
+    $PostBodyWithOptions = "{`"Agent`":`"$AgentName`"" + $Options + "}"
 
     #Get Agents
     $ModuleExecution = Invoke-WebRequest -Method Post -uri $moduleURI -Body $PostBody -ContentType 'application/json'

@@ -153,7 +153,15 @@ Function Get-BSNetworkScanData()
     #### Data Stuff
     foreach($Resource in $ResourcesJsonContent)
     {
-        $Data = $Data +[PSCustomObject]@{HostName=($Resource.Hostname);IPv4=($Resource.IPv4);Status=($Resource.Status);Computer=(New-UDLink -Text "RDP" -Url "remotedesktop://$Resource.IPv4");Note="";Last="99s"}
+        $Data = $Data +[PSCustomObject]@{
+            HostName=($Resource.Hostname);
+            IPv4=($Resource.IPv4);
+            Status=($Resource.Status);
+            Computer=(New-UDLink -Text "RDP" -Url "remotedesktop://$Resource.IPv4");
+            Note="";
+            Last="99s";
+            isEmpire="";
+        }
     }
        
     return $Data

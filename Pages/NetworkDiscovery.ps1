@@ -10,9 +10,25 @@ New-UDPage -Name "Network - Discovery" -Icon search -Content {
         if (($StartAddress -ne '') -and ($EndAddress -ne ''))
         {
             # Do a IPV4 Scan
-            #$StartAddress = '192.168.200.1'
-            #$EndAddress = '192.168.200.255'
+            $StartAddress = '192.168.200.1'
+            $EndAddress = '192.168.200.255'
             $NetworkScanResults = .\Modules\NetworkScan\IPv4NetworkScan.ps1 -StartIPv4Address $StartAddress -EndIPv4Address $EndAddress
+            
+            ForEach($Result in $NetworkScanResults)
+            {
+                <#
+                $PortScanResults = .\Modules\PortScan\IPv4PortScan.ps1 -ComputerName $Result.IPv4Address.IPAddressToString -StartPort 1337 -EndPort 1337
+                #Based on PortScanResults
+                if($PortScanResults.length -gt 0)
+                {
+                    #$Result.isEmpire = $true
+                }
+                else {
+                    #$Result.isEmpire = $false
+                }
+                #>
+                
+            }
 
             # Output a new Grid based on that info
             New-UDInputAction -Content @(
@@ -24,7 +40,7 @@ New-UDPage -Name "Network - Discovery" -Icon search -Content {
             )
 
             # Save to JSON File            
-            $NetworkScanResults | Select-Object -Property Hostname,@{Name="IPv4"; Expression = {$_.IPv4Address.IPAddressToString}},Status
+            $NetworkScanResults = $NetworkScanResults | Select-Object -Property Hostname,@{Name="IPv4"; Expression = {$_.IPv4Address.IPAddressToString}},Status
             Write-BSNetworkScanData -BSObjectData $NetworkScanResults
         }
         else {
