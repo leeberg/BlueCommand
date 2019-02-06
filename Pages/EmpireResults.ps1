@@ -35,13 +35,16 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
             $DownloadFolder =  $DownloadFolder + '\'
         }
 
-        New-UDInputAction -Toast "Getting Results for Ag ent: $EmpireAgentName"
+        New-UDInputAction -Toast "Getting Results for Agent: $EmpireAgentName"
+        Write-BSAuditLog -BSLogContent "Empire Results: Getting Results for Agent: $EmpireAgentName"
 
         # EXECUTE DOWNLOAD LOGS FOR AGENT
+        Write-BSAuditLog -BSLogContent "Empire Results: Attempting to Download Data from Agent: $EmpireAgentName to $DownloadFolder"
         $AgentLogDownloadStatus = Get-AgentDownloads -EmpireAgentName $EmpireAgentName -EmpireBox $EmpireBox -DownloadFolder $DownloadFolder
         
 
         # READ DOWNLOADED LOGS FOR AGENT
+        Write-BSAuditLog -BSLogContent "Empire Results: Attempting to Read Downloaded Data from Agent: $EmpireAgentName"
         $JsonAgentLogDetails = Get-LocalAgentLogDetails -EmpireAgentName $EmpireAgentName -DownloadFolder $DownloadFolder
         
 
@@ -87,6 +90,8 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
             # New-UDHtml -Markup ('<a href="file://'+$LocalAgentDownloadFolder+'" id="btnGetLoot" class="btn">Open Loot</a>')
 
         }
+
+        Write-BSAuditLog -BSLogContent "Empire Results: Retrieval and Display Completed"
   
     }
 

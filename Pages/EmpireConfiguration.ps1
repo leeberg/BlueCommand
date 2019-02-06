@@ -1,5 +1,25 @@
 New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
+    $NetworkResources = Get-BSNetworkScanData
+    $ValidEmpireNetworkResources = @()
+
+    ForEach($Resource in $NetworkResources)
+    {
+        if($Resource.isEmpire -eq 'YES')
+        {
+            $ValidEmpireNetworkResources = $ValidEmpireNetworkResources + $Resource
+           
+        }
+        else
+        {
+            #NOT EMPIRE SERVER
+        }
+    }
+
+
+
+
+
     $EmpireConfig = Get-BSEmpireConfigData
 
     New-UDLayout -Columns 1 {
@@ -9,13 +29,17 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
     }
 
     New-UDInput -Title "Connect to Empire Server" -Id "EmpireConfiguration" -SubmitText "Connect" -Content {
-        New-UDInputField -Type 'select' -Name 'EmpireComputer' -Values $EmpireConfig.empire_host
+        New-UDInputField -Type 'select' -Name 'EmpireComputer' -Values $ValidEmpireNetworkResources.HostName
         New-UDInputField -Type 'textarea' -Name 'EmpirePort' -DefaultValue $EmpireConfig.empire_port
         New-UDInputField -Type 'textarea' -Name 'EmpireToken' -DefaultValue $EmpireConfig.empire_token
     } -Endpoint {
         param($EmpireComputer, $EmpirePort, $EmpireToken)
         New-UDInputAction -Toast "Retrieving Empire Configurations!"
         
+        
+        Write-BSAuditLog -BSLogContent "Empire Configuration: Attempting to Retrieve Configuration from: $EmpireComputer"
+
+
         $EmpireConfiguration = Get-EmpireStatus -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
         Write-BSEmpireConfigData -BSObject $EmpireConfiguration
         
@@ -24,6 +48,8 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
         $EmpireModules = Get-EmpireModules -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
         Write-BSEmpireModuleData -BSObject $EmpireModules
+
+        Write-BSAuditLog -BSLogContent "Empire Configuration: Configuration Retrieval Complete"
 
     }
 

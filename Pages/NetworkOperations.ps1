@@ -14,6 +14,8 @@ New-UDPage -Name "Network - Operations" -Icon fighter_jet -RefreshInterval 5 -Co
 
         IF($Operation -eq 'Ping')
         {
+            Write-BSAuditLog -BSLogContent ('Network Operations: Attempting Network Operation PING on: ' + $Computer)
+
             $Pingas = Test-Connection -ComputerName $Computer
             
             New-UDInputAction -Content @(

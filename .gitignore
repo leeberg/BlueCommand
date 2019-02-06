@@ -7,4 +7,5 @@ Data/EmpireAgents.json
 Data/EmpireConfig.json
 Data/EmpireModules.json
 Data/NetworkScan.json
+Data/AuditLog.log
 test.ps1

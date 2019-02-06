@@ -3,7 +3,7 @@ $EmpireConfigFilePath = 'Data\EmpireConfig.json'
 $EmpireModuleFilePath = 'Data\EmpireModules.json'
 $EmpireAgentFilePath = 'Data\EmpireAgents.json'
 $NetworkScanFilePath = 'Data\NetworkScan.json'
-
+$BSLogFilePath = 'Data\AuditLog.log'
 
 
 Function Get-BSJSONObject 
@@ -159,8 +159,8 @@ Function Get-BSNetworkScanData()
             Status=($Resource.Status);
             Computer=(New-UDLink -Text "RDP" -Url "remotedesktop://$Resource.IPv4");
             Note="";
-            Last="99s";
-            isEmpire="";
+            LastScan=($Resource.ScanTime.DateTime);
+            isEmpire=($Resource.EmpireServer);
         }
     }
        
@@ -260,4 +260,13 @@ Param (
     Clear-BSJON -BSFile $NetworkScanFilePath
     Write-BSJSON -BSFile $NetworkScanFilePath -BSObjectData $BSObjectData
     
+}
+
+Function Write-BSAuditLog
+{
+Param (
+    $BSLogContent
+)
+    $BSLogContentFormatted = ($(Get-Date -Format 'yyyy-MM-dd hh:mm:ss') + ' : ' + $BSLogContent)
+    $BSLogContentFormatted | Out-File $BSLogFilePath -Append
 }

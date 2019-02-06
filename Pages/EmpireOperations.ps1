@@ -29,7 +29,9 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
         {
             $Session:CurrentlySelectedAgent = $EmpireAgentName
         }
-      
+        
+        Write-BSAuditLog -BSLogContent "Empire Operations: Selected Agent $EmpireAgentName"
+
         Clear-UDElement -Id "CurrentAgentUDElement"
         Add-UDElement -ParentId "CurrentAgentUDElement" -Content {
                 New-UDElement -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
@@ -57,6 +59,8 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
                 $ModuleName =  $ArgumentList[1]
                 $ModuleDescription = $ArgumentList[2]
                 $ModuleOptions = $ArgumentList[3]
+
+                Write-BSAuditLog -BSLogContent "Empire Operations: Planning Execution for $ModuleName on Agent $EmpireAgentName"
 
                 if ($EmpireAgentName -ne $null)
                 {
@@ -87,10 +91,12 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
                             $EmpirePort = $EmpireConfiguration.empire_port
                             $EmpireToken = $EmpireConfiguration.empire_token
 
-                            $Text = 'Executing Action: ' +  $ModuleName +' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
+                            $Text = 'Empire Operations: Executing Action: ' +  $ModuleName +' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
+                            New-UDInputAction -Toast $Text
+                            Write-BSAuditLog -BSLogContent $Text
+                         
+                            $EmpireModuleExeuction =  Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName -Options $ModuleOptions
                             
-                            $EmpireModuleExeuction =  Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
-                            New-UDInputAction -Toast $EmpireModuleExeuction
 
                             Clear-UDElement -Id "StrikePackageExecution"
                             Add-UDElement -ParentId "StrikePackageExecution" -Content {
