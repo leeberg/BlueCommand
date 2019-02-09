@@ -11,7 +11,7 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
     New-UDLayout -Columns 1 {
         New-UDHeading -Size 4 -Content {
             New-UDIcon -Icon money
-            "    EMPIRE Agent Results"
+            "    Agent Results"
         } 
        New-UDHeading -Text "Choose Agent and Download Location" -Size 6
        # New-UDHeading -Text "First we Will SElect an Agent" -Size 6 
@@ -22,8 +22,10 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
 
 
     New-UDInput -Title "Retrieve Results" -Id "AgentResultsRetrieval" -Content {
+        
         New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue "Null" -Placeholder "Select an Agent"
         New-UDInputField -Type 'textbox' -Name 'DownloadFolder' -DefaultValue "C:\Downloads" -Placeholder "Set Agent Download Location"
+        New-UDInputField -Type 'textbox' -Name 'WindowsCredentialName' -DefaultValue 'empireserver' -Placeholder 'Name of Generic Windows Credential to Connect to Empire Server'
 
     } -Endpoint {
         param($EmpireAgentName, $DownloadFolder)
@@ -40,7 +42,7 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
 
         # EXECUTE DOWNLOAD LOGS FOR AGENT
         Write-BSAuditLog -BSLogContent "Empire Results: Attempting to Download Data from Agent: $EmpireAgentName to $DownloadFolder"
-        $AgentLogDownloadStatus = Get-AgentDownloads -EmpireAgentName $EmpireAgentName -EmpireBox $EmpireBox -DownloadFolder $DownloadFolder
+        $AgentLogDownloadStatus = Get-AgentDownloads -EmpireAgentName $EmpireAgentName -EmpireBox $EmpireBox -DownloadFolder $DownloadFolder -CredentialName $WindowsCredentialName
         
 
         # READ DOWNLOADED LOGS FOR AGENT

@@ -83,6 +83,7 @@ Function Get-BSEmpireConfigData()
             api_username=($Resource.api_username);
             install_path=($Resource.install_path);
             version=($Resource.version);
+            sync_time=($Resource.sync_time)
         }
     }
 

@@ -9,7 +9,7 @@ function Start-BSDash {
         $Pages += . $_.FullName
     }
     
-    $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueStrikeData.psm1", "Modules\Empire\BlueStrikeEmpire.psm1")
+    $BSEndpoints = New-UDEndpointInitialization -Module @("PowerShellModules\Empire\BlueStrikeData.psm1", "PowerShellModules\Empire\BlueStrikeEmpire.psm1")
 
     $Dashboard = New-UDDashboard -Title "BlueStrike" -Pages $Pages -EndpointInitialization $BSEndpoints
     Try{
@@ -21,6 +21,22 @@ function Start-BSDash {
         Write-BSAuditLog -BSLogContent "BlueStrike Failed to Start!"
     }
     
+
+
+
+}
+
+function Start-BSAPI{
+
+    $Endpoints = @()
+
+    $Endpoints += New-UDEndpoint -url 'GetEmpireModules' -Endpoint {
+        Get-BSEmpireModuleData | ConvertTo-Json
+        
+    }
+
+    Start-UDRestApi -Endpoint $Endpoints -Port 10001 -AutoReload
+
 
 
 

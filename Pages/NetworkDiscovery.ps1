@@ -15,7 +15,7 @@ New-UDPage -Name "Network - Discovery" -Icon search -Content {
 
             Write-BSAuditLog -BSLogContent "Network Discovery: Starting IP Scan"
 
-            $NetworkScanResults = .\Modules\NetworkScan\IPv4NetworkScan.ps1 -StartIPv4Address $StartAddress -EndIPv4Address $EndAddress
+            $NetworkScanResults = .\PowerShellModules\NetworkScan\IPv4NetworkScan.ps1 -StartIPv4Address $StartAddress -EndIPv4Address $EndAddress
             
             $ScanCount = ($NetworkScanResults | measure).Count
 
@@ -31,7 +31,7 @@ New-UDPage -Name "Network - Discovery" -Icon search -Content {
                 Write-BSAuditLog -BSLogContent ('Network Discovery: Port Scanning: ' + $Result.Hostname)
                 $EmpirePortOpen = 'No'
                 
-                $PortScanResults = .\Modules\PortScan\IPv4PortScan.ps1 -ComputerName $Result.IPv4Address.IPAddressToString -StartPort 1337 -EndPort 1337
+                $PortScanResults = .\PowerShellModules\PortScan\IPv4PortScan.ps1 -ComputerName $Result.IPv4Address.IPAddressToString -StartPort 1337 -EndPort 1337
  
                 if($PortScanResults)
                 {

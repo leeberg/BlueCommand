@@ -6,9 +6,14 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
     $EmpireAgents = Get-BSEmpireAgentData
     $EmpireModules = Get-BSEmpireModuleData
 
+
     #### Loading Done
     
     ## If Only ONE Agent Availible Just Select the First Agent
+    if($EmpireAgents)
+    {
+        $Session:CurrentlySelectedAgent = ($EmpireAgents | Select-Object -First 1).name
+    }
 
 
     New-UDLayout -Columns 1 {
@@ -17,13 +22,11 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
         } 
     }
     
-    New-UDElement -Id "CurrentAgentUDElement" -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
+    #New-UDElement -Id "CurrentAgentUDElement" -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
  
-    $FirstAgentName = ($EmpireAgents | Select-Object -First 1 -Property 'name').name
-    
     
     New-UDInput -Title "Target Agent" -Id "AgentSelectionOperations" -SubmitText "Confirm" -Content {
-        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue $FirstAgentName -Placeholder "Select an Agent"
+        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue $Session:CurrentlySelectedAgent -Placeholder "Select an Agent"
         
         
 
@@ -35,10 +38,10 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
         
         Write-BSAuditLog -BSLogContent "Empire Operations: Selected Agent $EmpireAgentName"
 
-        Clear-UDElement -Id "CurrentAgentUDElement"
-        Add-UDElement -ParentId "CurrentAgentUDElement" -Content {
-                New-UDElement -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
-        }
+       # Clear-UDElement -Id "CurrentAgentUDElement"
+       # Add-UDElement -ParentId "CurrentAgentUDElement" -Content {
+       #         New-UDElement -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
+       # }
         
     }
 

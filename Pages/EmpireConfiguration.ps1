@@ -21,6 +21,8 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
 
 
     $EmpireConfig = Get-BSEmpireConfigData
+  
+
 
     New-UDLayout -Columns 1 {
         New-UDHeading -Size 4 -Content {

@@ -1,3 +1,5 @@
+Import-Module CredentialManager -force
+
 #[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
 add-type @"
 using System.Net;
@@ -97,7 +99,7 @@ function Start-BSEmpireModuleOnAgent
 function Get-AgentDownloads
 {
     Param(
-        #$Credential = (Get-Credential),
+        $CredentialName = 'empireserver',
         $EmpireServer = 'empireserver01',
         $EmpireDirectory = "/home/lee/Empire",
         $EmpireAgentName = "8BYZEAXN",
@@ -105,11 +107,10 @@ function Get-AgentDownloads
             
     )
 
+    ### USER "CREDENTIAL MANAGER" TO CONNECT TO CRED MANAGER IN WINDERS
+    $StoredCredential = Get-StoredCredential -Target $CredentialName
 
-    $username = "lee" 
-    $password = 'P@ssword' | ConvertTo-SecureString -AsPlainText -Force 
-    $Credential= New-Object -typename System.Management.Automation.PSCredential -argumentlist $username, $password
-
+    $Credential = $StoredCredential
 
     $LocalDownloadFolder = ($DownloadFolder + $EmpireAgentName)
     $ExecutionResult = ""
@@ -332,25 +333,33 @@ Function Get-EmpireStatus
 {
     Param(
     $EmpireBox = '192.168.200.108',
-    $EmpireToken = '6jq0or8kcawfi4vjyktehwuqugv7uhxes04mrqkq',
+    $EmpireToken = 'kw666mgmp9kuddku6bs87ctb8jtmr04z4jpu97a5',
     $EmpirePort = '1337'
     )
 
     #Get Configuration
-    $ConfigurationInformation = Invoke-WebRequest -Method Get -uri "https://$EmpireBox`:$EmpirePort/api/config?token=$EmpireToken"
-    $ConfigurationInformation = $ConfigurationInformation.Content | ConvertFrom-Json
-    $ConfigurationInformation = $ConfigurationInformation.config
+    try{
+        $ConfigurationInformation = Invoke-WebRequest -Method Get -uri "https://$EmpireBox`:$EmpirePort/api/config?token=$EmpireToken"
+        $ConfigurationInformation = $ConfigurationInformation.Content | ConvertFrom-Json
+        $ConfigurationInformation = $ConfigurationInformation.config
 
 
-    $ConfigurationInformationObject = [PSCustomObject]@{
-        empire_host = $EmpireBox
-        empire_port = $EmpirePort
-        empire_token = $EmpireToken
-        api_username = $ConfigurationInformation.api_username
-        install_path = $ConfigurationInformation.install_path
-        version    = $ConfigurationInformation.version
+        $ConfigurationInformationObject = [PSCustomObject]@{
+            empire_host = $EmpireBox
+            empire_port = $EmpirePort
+            empire_token = $EmpireToken
+            api_username = $ConfigurationInformation.api_username
+            install_path = $ConfigurationInformation.install_path
+            version    = $ConfigurationInformation.version
+            sync_time = ($(Get-Date -Format 'yyyy-MM-dd hh:mm:ss'))
+        }
+
     }
-
+    catch
+    {
+        $ConfigurationInformationObject = $null
+    }
+    
     return $ConfigurationInformationObject 
 }
 
