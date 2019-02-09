@@ -23,6 +23,7 @@ BlueStrike
     + Generate a Listener / Stager
     + Deploy Agents
 5. Connect to the your Empire Server on the Empire Configuration Page or use Network Discovery to discover your Empire Server.
-    + Enter your Empire REST Key and BlueStrike will connect to your empire server allowing you to execute commands.
-6. 
-![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
+    + Enter your Empire REST Key and BlueStrike will connect to your empire server allowing you to execute commands. ![](./img/empire_rest.png) 
+6.  BlueStrike will try and utilze POSH-SSH to SCP Download the Empire Agents Downloads/Logs - store a "Generic Credential" in your windows credential manager to facilitate this. ![](./img/credential_manager.png) 
+7.  
+    ![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
