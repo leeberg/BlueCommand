@@ -21,9 +21,12 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Content {
  
     $FirstAgentName = ($EmpireAgents | Select-Object -First 1 -Property 'name').name
     
+    
     New-UDInput -Title "Target Agent" -Id "AgentSelectionOperations" -SubmitText "Confirm" -Content {
         New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue $FirstAgentName -Placeholder "Select an Agent"
-    
+        
+        
+
     } -Endpoint{
         if($EmpireAgentName)
         {
