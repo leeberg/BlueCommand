@@ -15,9 +15,9 @@ BlueStrike
 
 ## Getting Started
 1. Install [Universal Dashboard](https://universaldashboard.io/) ``Install-Module UniversalDashboard -AccecptLicense``
-2. Install [PoshSSH](https://github.com/darkoperator/Posh-SSH)
+2. Install [PoshSSH](https://github.com/darkoperator/Posh-SSH) ``Install-Module -Name Posh-SSH``
     + PoshSSH is used to run SCP commands to extract agent artifacts.
-3. Install [PowerShell Credential Manager](https://github.com/davotronic5000/PowerShell_Credential_Manager) `` Install-Module -Name CredentialManager
+3. Install [PowerShell Credential Manager](https://github.com/davotronic5000/PowerShell_Credential_Manager) ``Install-Module -Name CredentialManager``
 4. Setup [PowerShell Empire](https://www.powershellempire.com/)
     + Run Empire with --rest command
     + Generate a Listener / Stager
