@@ -17,10 +17,12 @@ BlueStrike
 1. Install [Universal Dashboard](https://universaldashboard.io/) ``Install-Module UniversalDashboard -AccecptLicense``
 2. Install [PoshSSH](https://github.com/darkoperator/Posh-SSH)
     + PoshSSH is used to run SCP commands to extract agent artifacts.
-3. Setup SSH Key-Based Authentication on your Empire Server
-4. Setup Empire
-    + Run Empire with --rest command, feed the token to BlueStrike on the empire config page
+3. Install [PowerShell Credential Manager](https://github.com/davotronic5000/PowerShell_Credential_Manager) `` Install-Module -Name CredentialManager
+4. Setup [PowerShell Empire](https://www.powershellempire.com/)
+    + Run Empire with --rest command
+    + Generate a Listener / Stager
+    + Deploy Agents
 5. Connect to the your Empire Server on the Empire Configuration Page or use Network Discovery to discover your Empire Server.
-6. Enter your Empire REST Key and BlueStrike will connect to your empire server allowing you to execute commands.
-7. 
-     ![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
+    + Enter your Empire REST Key and BlueStrike will connect to your empire server allowing you to execute commands.
+6. 
+![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
