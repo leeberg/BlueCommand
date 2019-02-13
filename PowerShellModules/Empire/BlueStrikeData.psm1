@@ -1,3 +1,5 @@
+#### All functions need to have proper function params, synopsis, help, etc....
+#### Also where my psd1 file at
 
 $EmpireConfigFilePath = 'Data\EmpireConfig.json'
 $EmpireModuleFilePath = 'Data\EmpireModules.json'

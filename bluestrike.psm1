@@ -18,6 +18,7 @@ function Start-BSDash {
     }
     Catch
     {
+        Write-Error($_.Exception)
         Write-BSAuditLog -BSLogContent "BlueStrike Failed to Start!"
     }
     
@@ -27,6 +28,9 @@ function Start-BSDash {
 }
 
 function Start-BSAPI{
+
+    ### Haven't messed around with this at all
+    ### Next Step to replace module calls with API Calls?
 
     $Endpoints = @()
 

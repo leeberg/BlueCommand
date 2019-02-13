@@ -1,3 +1,6 @@
+#### All functions need to have proper function params, synopsis, help, etc....
+#### Also where my psd1 file at
+
 Import-Module CredentialManager -force
 
 #[System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
