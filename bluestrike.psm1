@@ -1,7 +1,14 @@
 function Start-BSDash {
     param(
-        $EmpireServer = ''
+        [Parameter(Mandatory=$true)] $EmpireServer,
+        [Parameter(Mandatory=$true)] $BlueStrikeFolder
     )
+
+    # This Caches the Connection Info so the other components and modules can utilze them
+    $Cache:ConnectionInfo = @{
+        Server = $EmpireServer
+        Credential = $Credential
+    }
 
     # Empire Server
     $Cache:EmpireServer = $EmpireServer
@@ -14,6 +21,23 @@ function Start-BSDash {
     }
     
 
+    #### DATA FOLDER SETUP
+
+    #Folder Pathes
+    $Cache:BlueStrikeFolder = $BlueStrikeFolder
+    $Cache:BlueStrikeDataFolder = $Cache:BlueStrikeFolder + '\Data'
+
+    #File Paths
+    $Cache:EmpireConfigFilePath = $Cache:BlueStrikeFolder + '\Data\EmpireConfig.json'
+    $Cache:EmpireModuleFilePath = $Cache:BlueStrikeFolder + '\Data\EmpireModules.json'
+    $Cache:EmpireAgentFilePath = $Cache:BlueStrikeFolder + '\Data\EmpireAgents.json'
+    $Cache:NetworkScanFilePath = $Cache:BlueStrikeFolder + '\Data\NetworkScan.json'
+    $Cache:BSLogFilePath = $Cache:BlueStrikeFolder + '\Data\AuditLog.log'
+
+
+    if((Test-Path -Path $Cache:BlueStrikeFolder)  -eq $false){throw 'The BlueStrike Data Folder does not exist!'}
+    if((Test-Path -Path $Cache:BlueStrikeDataFolder) -eq $false){New-Item -Path $Cache:BlueStrikeDataFolder -ItemType Directory}
+    if((Test-Path -Path $Cache:BSLogFilePath) -eq $false){New-Item -Path $Cache:BSLogFilePath -ItemType File}
 
     #### THEME    
     
@@ -60,9 +84,6 @@ function Start-BSDash {
             }
     }
     
-
-
-
 
     $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueStrikeData.psm1", "Modules\Empire\BlueStrikeEmpire.psm1")
     $Dashboard = New-UDDashboard -Title "BlueStrike" -Pages $Pages -EndpointInitialization $BSEndpoints -Theme $DarkDefault

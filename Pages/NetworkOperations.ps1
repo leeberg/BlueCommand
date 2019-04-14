@@ -5,6 +5,7 @@ New-UDPage -Name "NetworkOperations" -Icon fighter_jet -RefreshInterval 5 -Endpo
     
     New-UDInput -Title "Operations" -Id "HackForm" -Content {
         New-UDInputField -Type 'select' -Name 'Computer' -Values $NetworkResources.Hostname
+        New-UDInputField -Type 'textarea' -Name 'IP' 
         New-UDInputField -Type 'select' -Name 'Operation' -Values @("Ping") -DefaultValue "Ping"
         New-UDInputField -Type 'textarea' -Name 'Notes' -Placeholder 'Notes'
     } -Endpoint {
@@ -16,7 +17,15 @@ New-UDPage -Name "NetworkOperations" -Icon fighter_jet -RefreshInterval 5 -Endpo
         {
             Write-BSAuditLog -BSLogContent ('Network Operations: Attempting Network Operation PING on: ' + $Computer + ' with notes: ' + $Notes)
 
-            $Pingas = Test-Connection -ComputerName $Computer
+            If($IP -ne $null)
+            {
+                $Pingas = Test-Connection -ComputerName $IP
+            }
+            else 
+            {
+                $Pingas = Test-Connection -ComputerName $Computer 
+            }
+            
             
             New-UDInputAction -Content @(
                                 

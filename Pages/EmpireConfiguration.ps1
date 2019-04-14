@@ -22,12 +22,13 @@ New-UDPage -Name "EmpireConfiguration" -Icon empire -Endpoint {
 
     New-UDInput -Title "Connect to New Empire Server" -Id "EmpireConfiguration" -SubmitText "Connect" -Content {
         New-UDInputField -Type 'textarea' -Name 'EmpireIP'
-        New-UDInputField -Type 'textarea' -Name 'EmpirePort' -DefaultValue $EmpireConfig.empire_port
+        New-UDInputField -Type 'textarea' -Name 'EmpirePort' -DefaultValue '1337'
         New-UDInputField -Type 'textarea' -Name 'EmpireToken' -DefaultValue $EmpireConfig.empire_token
     } -Endpoint {
-        param($EmpireComputer, $EmpirePort, $EmpireToken)
+        param($EmpireIP, $EmpirePort, $EmpireToken)
         New-UDInputAction -Toast "Retrieving Empire Configurations!"
         
+        $EmpireComputer = $EmpireIP
         
         Write-BSAuditLog -BSLogContent "Empire Configuration: Attempting to Retrieve Configuration from: $EmpireComputer"
 
@@ -41,6 +42,11 @@ New-UDPage -Name "EmpireConfiguration" -Icon empire -Endpoint {
         $EmpireModules = Get-EmpireModules -EmpireBox $EmpireComputer -EmpireToken $EmpireToken -EmpirePort $EmpirePort
         Write-BSEmpireModuleData -BSObject $EmpireModules
 
+        #Update Other Elements
+        Sync-UDElement -Id "ExistingEmpireInstance" -Broadcast
+        Sync-UDElement -Id "EmpireAgents" -Broadcast
+        Sync-UDElement -Id "EmpireModules" -Broadcast
+
         Write-BSAuditLog -BSLogContent "Empire Configuration: Configuration Retrieval Complete"
 
     }
@@ -48,7 +54,7 @@ New-UDPage -Name "EmpireConfiguration" -Icon empire -Endpoint {
   
 
 
-    New-UDGrid -Title "Existing Empire Instance" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
+    New-UDGrid -Title "Existing Empire Instance" -Id "ExistingEmpireInstance" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
         $JsonData = Get-BSEmpireConfigData
         If ($JsonData.version)
         {
@@ -62,12 +68,12 @@ New-UDPage -Name "EmpireConfiguration" -Icon empire -Endpoint {
     }
 
         
-    New-UDGrid -Title "Empire Agents" -Headers @("id", "name", "checkin_time","external_ip","hostname","internal_ip","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -Properties @("id", "name", "checkin_time","external_ip","hostname","internal_ip","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -AutoRefresh -Endpoint {
+    New-UDGrid -Title "Empire Agents" -Id "EmpireAgents" -Headers @("id", "name", "checkin_time","external_ip","hostname","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -Properties @("id", "name", "checkin_time","external_ip","hostname","langauge", "langauge_version", "lastseen_time","listener","os_details","username") -AutoRefresh -Endpoint {
         $JsonData = Get-BSEmpireAgentData
         $JsonData | Out-UDGridData
     }        
 
-    New-UDGrid -Title "Empire Modules" -Headers @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -Properties @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -AutoRefresh -Endpoint {
+    New-UDGrid -Title "Empire Modules" -Id "EmpireModules" -Headers @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -Properties @("Name", "Description", "Author","Language","NeedsAdmin","OpsecSafe") -AutoRefresh -Endpoint {
         $JsonData = Get-BSEmpireModuleData
         $JsonData | Out-UDGridData
     }      

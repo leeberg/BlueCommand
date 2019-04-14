@@ -1,49 +1,20 @@
-New-UDPage -Name "EmpireOperations" -Icon empire -Endpoint {
+New-UDPage -Name "EmpireExecution" -Icon empire -Endpoint {
   
 
-    $Session:CurrentlySelectedAgent = "NULL"
-   
-    $EmpireAgents = Get-BSEmpireAgentData
-    $EmpireModules = Get-BSEmpireModuleData
-
-
-    #### Loading Done
+    $Session:CurrentlySelectedAgent = "NULL"  
+    $Session:EmpireModules = Get-BSEmpireModuleData
     
     ## If Only ONE Agent Availible Just Select the First Agent
-    if($EmpireAgents)
+    $Session:EmpireAgents = Get-BSEmpireAgentData
+    if($Session:EmpireAgents)
     {
-        $Session:CurrentlySelectedAgent = ($EmpireAgents | Select-Object -First 1).name
+        $Session:CurrentlySelectedAgent = ($Session:EmpireAgents | Select-Object -First 1).name
     }
-
-
-    #New-UDElement -Id "CurrentAgentUDElement" -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
- 
-    
-    New-UDInput -Title "Target Agent" -Id "AgentSelectionOperations" -SubmitText "Confirm" -Content {
-        New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue $Session:CurrentlySelectedAgent -Placeholder "Select an Agent"
-        
-        
-
-    } -Endpoint{
-        if($EmpireAgentName)
-        {
-            $Session:CurrentlySelectedAgent = $EmpireAgentName
-        }
-        
-        Write-BSAuditLog -BSLogContent "Empire Operations: Selected Agent $EmpireAgentName"
-
-       # Clear-UDElement -Id "CurrentAgentUDElement"
-       # Add-UDElement -ParentId "CurrentAgentUDElement" -Content {
-       #         New-UDElement -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
-       # }
-        
-    }
-
 
 
     #### Module "Package" Selection Box - With Boxes!
-    New-UDGrid -Title "Package Selection" -Headers @("Name", "Description", " ") -Properties @("Name", "Description", "Execute") -AutoRefresh -Endpoint {
-        $EmpireModules  | ForEach-Object {
+    New-UDGrid -Title "Package Selection" -Headers @("Name", "Description", " ") -Properties @("Name", "Description", "Execute") -Endpoint {
+        $Session:EmpireModules  | ForEach-Object {
 
         [PSCustomObject]@{
             Name = $_.Name
@@ -75,8 +46,9 @@ New-UDPage -Name "EmpireOperations" -Icon empire -Endpoint {
                         }
 
                         New-UDInput -Title "Execute Strike Package" -Id "AgentModuleOperations" -SubmitText "Execute" -Content {
-                            New-UDInputField -Type 'textbox' -Name 'Options'
-                        } -Endpoint {
+                            New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $Session:EmpireAgents.name -DefaultValue $Session:CurrentlySelectedAgent -Placeholder "Select an Agent"
+                            New-UDInputField -Type 'textbox' -Name 'OptionsJSON' -DefaultValue $null
+                            } -Endpoint {
                         
                             ## GET EMPIRE CONFIGO
                             
@@ -86,12 +58,22 @@ New-UDPage -Name "EmpireOperations" -Icon empire -Endpoint {
                             $EmpirePort = $EmpireConfiguration.empire_port
                             $EmpireToken = $EmpireConfiguration.empire_token
 
-                            $Text = 'Empire Operations: Executing Action: ' +  $ModuleName +' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
-                            New-UDInputAction -Toast $Text
-                            Write-BSAuditLog -BSLogContent $Text
-                         
-                            $EmpireModuleExeuction =  Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName -Options $ModuleOptions
+                            ## TODO OPtions Parsing?
+                            If($OptionsJSON)
+                            {
+                                $ExecutuionLog = 'Empire Operations: Executing Action: ' +  $ModuleName +' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
+                                Write-BSAuditLog -BSLogContent $ExecutuionLog
+                                $EmpireModuleExeuction = Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
+                            }
+                            else 
+                            {
+                                $ExecutuionLog = 'Empire Operations: Executing Action: ' +  $ModuleName +' WITH OPTIONS: ' + $OptionsJSON + ' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
+                                Write-BSAuditLog -BSLogContent $ExecutuionLog
+                                $EmpireModuleExeuction = Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName -Options $OptionsJSON
+                            }
+                                                                           
                             
+                            Write-BSAuditLog -BSLogContent $EmpireModuleExeuction
 
                             Clear-UDElement -Id "StrikePackageExecution"
                             Add-UDElement -ParentId "StrikePackageExecution" -Content {

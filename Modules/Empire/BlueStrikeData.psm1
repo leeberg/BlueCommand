@@ -1,13 +1,6 @@
 #### All functions need to have proper function params, synopsis, help, etc....
 #### Also where my psd1 file at
 
-$EmpireConfigFilePath = 'Data\EmpireConfig.json'
-$EmpireModuleFilePath = 'Data\EmpireModules.json'
-$EmpireAgentFilePath = 'Data\EmpireAgents.json'
-$NetworkScanFilePath = 'Data\NetworkScan.json'
-$BSLogFilePath = 'Data\AuditLog.log'
-
-
 Function Get-BSJSONObject 
 {
 Param(
@@ -43,7 +36,7 @@ Function Get-BSEmpireAgentData()
 {
 
     $Data = @()
-    $ResourcesJsonContent = Get-BSJSONObject -BSFile $EmpireAgentFilePath
+    $ResourcesJsonContent = Get-BSJSONObject -BSFile $Cache:EmpireAgentFilePath
 
     #### Data Stuff
     foreach($Resource in $ResourcesJsonContent)
@@ -73,7 +66,7 @@ Function Get-BSEmpireConfigData()
 {
 
     $Data = @()
-    $ResourcesJsonContent = Get-BSJSONObject -BSFile $EmpireConfigFilePath
+    $ResourcesJsonContent = Get-BSJSONObject -BSFile $Cache:EmpireConfigFilePath
 
     #### Data Stuff
     foreach($Resource in $ResourcesJsonContent)
@@ -103,7 +96,7 @@ Function Get-BSEmpireModuleData()
     $FirstPartOfDefinition = '^.*=@{Description='
     $SecondPartOfDefinition = ';.*;.*Value=.*}'
 
-    $ResourcesJsonContent = Get-BSJSONObject -BSFile $EmpireModuleFilePath
+    $ResourcesJsonContent = Get-BSJSONObject -BSFile $Cache:EmpireModuleFilePath
 
     #### Data Stuff
     foreach($Module in $ResourcesJsonContent)
@@ -151,7 +144,7 @@ Function Get-BSNetworkScanData()
 {
 
     $Data = @()
-    $ResourcesJsonContent = Get-BSJSONObject -BSFile $NetworkScanFilePath
+    $ResourcesJsonContent = Get-BSJSONObject -BSFile $Cache:NetworkScanFilePath
         
     #### Data Stuff
     foreach($Resource in $ResourcesJsonContent)
@@ -224,8 +217,8 @@ Param (
     $BSObjectData        
 )
 
-    Clear-BSJON -BSFile $EmpireAgentFilePath
-    Write-BSJSON -BSFile $EmpireAgentFilePath -BSObjectData $BSObjectData
+    Clear-BSJON -BSFile $Cache:EmpireAgentFilePath
+    Write-BSJSON -BSFile $Cache:EmpireAgentFilePath -BSObjectData $BSObjectData
 
 
 }
@@ -236,8 +229,8 @@ Function Write-BSEmpireConfigData
 Param (
     $BSObjectData        
 )
-    Clear-BSJON -BSFile $EmpireConfigFilePath
-    Write-BSJSON -BSFile $EmpireConfigFilePath -BSObjectData $BSObjectData
+    Clear-BSJON -BSFile $Cache:EmpireConfigFilePath
+    Write-BSJSON -BSFile $Cache:EmpireConfigFilePath -BSObjectData $BSObjectData
 
 
 }
@@ -247,8 +240,8 @@ Function Write-BSEmpireModuleData
 Param (
     $BSObjectData        
 )
-    Clear-BSJON -BSFile $EmpireModuleFilePath
-    Write-BSJSON -BSFile $EmpireModuleFilePath -BSObjectData $BSObjectData
+    Clear-BSJON -BSFile $Cache:EmpireModuleFilePath
+    Write-BSJSON -BSFile $Cache:EmpireModuleFilePath -BSObjectData $BSObjectData
     
 
 }
@@ -260,8 +253,8 @@ Function Write-BSNetworkScanData
 Param (
     $BSObjectData        
 )
-    Clear-BSJON -BSFile $NetworkScanFilePath
-    Write-BSJSON -BSFile $NetworkScanFilePath -BSObjectData $BSObjectData
+    Clear-BSJON -BSFile $Cache:NetworkScanFilePath
+    Write-BSJSON -BSFile $Cache:NetworkScanFilePath -BSObjectData $BSObjectData
     
 }
 
@@ -271,5 +264,5 @@ Param (
     $BSLogContent
 )
     $BSLogContentFormatted = ($(Get-Date -Format 'yyyy-MM-dd hh:mm:ss') + ' : ' + $BSLogContent)
-    $BSLogContentFormatted | Out-File $BSLogFilePath -Append
+    $BSLogContentFormatted | Out-File $Cache:BSLogFilePath -Append
 }
