@@ -1,4 +1,4 @@
-New-UDPage -Name "Empire - Operations" -Icon empire -Content {
+New-UDPage -Name "Empire - Operations" -Icon empire -Endpoint {
   
 
     $Session:CurrentlySelectedAgent = "NULL"

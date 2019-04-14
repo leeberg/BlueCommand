@@ -1,13 +1,13 @@
-$EmpireAgents = Get-BSEmpireAgentData
-$EmpireModules = Get-BSEmpireModuleData
-$EmpireConfiguration = Get-BSEmpireConfigData
-                            
-$EmpireBox = $EmpireConfiguration.empire_host
-$EmpirePort = $EmpireConfiguration.empire_port
-$EmpireToken = $EmpireConfiguration.empire_token
+New-UDPage -Name "Empire - Results" -Icon empire -Endpoint {
+    
+    $EmpireAgents = Get-BSEmpireAgentData
+    $EmpireModules = Get-BSEmpireModuleData
+    $EmpireConfiguration = Get-BSEmpireConfigData
+                                
+    $EmpireBox = $EmpireConfiguration.empire_host
+    $EmpirePort = $EmpireConfiguration.empire_port
+    $EmpireToken = $EmpireConfiguration.empire_token
 
-New-UDPage -Name "Empire - Results" -Icon empire -Content {
-        
     New-UDLayout -Columns 1 {
         New-UDHeading -Size 4 -Content {
             New-UDIcon -Icon money
@@ -58,7 +58,6 @@ New-UDPage -Name "Empire - Results" -Icon empire -Content {
             New-UDElement -Tag "li" -Content  {New-UDPreloader}
         }            
 
-        #$EmpireResults = .\Tools\Empire\GetEmpireAgentResults.ps1 -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName
         
         Clear-UDElement -Id "ExecutionResults2"
         Clear-UDElement -Id "ButtonOpenLoot"

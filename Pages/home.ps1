@@ -1,6 +1,6 @@
 
 
-New-UDPage -Name "Home" -Icon home -Content {
+New-UDPage -Name "Home" -Icon home -Endpoint {
             
     New-UDRow -Columns {
         

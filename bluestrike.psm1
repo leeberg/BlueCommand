@@ -1,18 +1,23 @@
 function Start-BSDash {
-    
-    Write-BSAuditLog -BSLogContent "Starting BlueStrike!"
+    param(
+        $EmpireServer = ''
+    )
+
+    # Empire Server
+    $Cache:EmpireServer = $EmpireServer
 
     $Pages = @()
-    $Pages += . (Join-Path $PSScriptRoot "pages\home.ps1")
+    $Pages += . (yJoin-Path $PSScriptRoot "pages\home.ps1")
 
     Get-ChildItem (Join-Path $PSScriptRoot "pages") -Exclude "home.ps1" | ForEach-Object {
         $Pages += . $_.FullName
     }
     
-    $BSEndpoints = New-UDEndpointInitialization -Module @("PowerShellModules\Empire\BlueStrikeData.psm1", "PowerShellModules\Empire\BlueStrikeEmpire.psm1")
-
+    $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueStrikeData.psm1", "Modules\Empire\BlueStrikeEmpire.psm1")
     $Dashboard = New-UDDashboard -Title "BlueStrike" -Pages $Pages -EndpointInitialization $BSEndpoints
+    
     Try{
+        Write-BSAuditLog -BSLogContent "Starting BlueStrike!"
         Start-UDDashboard -Dashboard $Dashboard -Port 10000
         Write-BSAuditLog -BSLogContent "BlueStrike Started!"
     }

@@ -1,8 +1,13 @@
+# BlueStrike Start Script
+
+# Set These Variables - and populate the Credential Object
+$Credential = Get-Credential
+$EmpireServerIP = '192.168.200.155'
+
+
 Import-Module .\bluestrike.psd1 -Force
-Import-Module .\PowerShellModules\Empire\BlueStrikeData.psm1 -Force
-Import-Module .\PowerShellModules\Empire\BlueStrikeEmpire.psm1 -Force
 
 Get-UDDashboard | Stop-UDDashboard
 Get-UDRestApi | Stop-UDRestAPI
-Start-BSDash
-Start-BSAPI 
+Start-BSDash -EmpireServer $EmpireServer
+

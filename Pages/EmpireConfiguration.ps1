@@ -1,4 +1,4 @@
-New-UDPage -Name "Empire - Configuration" -Icon empire -Content {
+New-UDPage -Name "Empire - Configuration" -Icon empire -Endpoint {
 
     $NetworkResources = Get-BSNetworkScanData
     $ValidEmpireNetworkResources = @()
