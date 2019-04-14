@@ -29,7 +29,7 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
         }
         New-UDColumn -Size 2 {         
             New-UDCard -Id 'crd_home1' -Title "" -Content{
-                New-UDButton -Id "BTN_GotoEmpireResults" -Icon money -Text "Empire Results" -OnClick {                                 
+                New-UDButton -Id "BTN_GotoEmpireResults" -Icon money_bill -Text "Empire Results" -OnClick {                                 
                     $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Results" 
                 }         
             }
@@ -75,7 +75,7 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
 
             New-UDCounter -Title "Network Resources Discovered" -Endpoint {
                 $NetworkResourcesCount | ConvertTo-Json
-            } -FontColor "black"
+            }
 
         }
 
@@ -83,7 +83,7 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
 
             New-UDCounter -Title "Modules Currently Loaded" -Endpoint {
                 $EmpireModuleCount | ConvertTo-Json
-            } -FontColor "black"
+            }
 
         }
         
@@ -91,37 +91,9 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
 
             New-UDCounter -Title "Agents Currently Active" -Endpoint {
                 $EmpireAgentsCount | ConvertTo-Json
-            } -FontColor "black"
+            }
 
         }
-
-        New-UDColumn -Size 2 {    
-
-            New-UDCounter -Title "Strike Packages Deployed" -Endpoint {
-                18 | ConvertTo-Json
-            } -FontColor "black"
-
-        }
-
-        New-UDColumn -Size 2 {    
-
-            New-UDCounter -Title "Agent Results Downloads" -Endpoint {
-                5 | ConvertTo-Json
-            } -FontColor "black"
-
-        }
-
-
-        New-UDColumn -Size 2 {    
-
-            New-UDCard -Title 'Operation Status' -Content {
-                New-UDParagraph -Text 'ACTIVE
-                '
-            } 
-        
-
-        }
-
 
     }
 

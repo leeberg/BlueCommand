@@ -1,4 +1,4 @@
-New-UDPage -Name "Empire - Results" -Icon empire -Endpoint {
+New-UDPage -Name "EmpireResults" -Icon empire -Endpoint {
     
     $EmpireAgents = Get-BSEmpireAgentData
     $EmpireModules = Get-BSEmpireModuleData
@@ -7,18 +7,6 @@ New-UDPage -Name "Empire - Results" -Icon empire -Endpoint {
     $EmpireBox = $EmpireConfiguration.empire_host
     $EmpirePort = $EmpireConfiguration.empire_port
     $EmpireToken = $EmpireConfiguration.empire_token
-
-    New-UDLayout -Columns 1 {
-        New-UDHeading -Size 4 -Content {
-            New-UDIcon -Icon money
-            "    Agent Results"
-        } 
-       New-UDHeading -Text "Choose Agent and Download Location" -Size 6
-       # New-UDHeading -Text "First we Will SElect an Agent" -Size 6 
-       # New-UDHeading -Text "Second we will download with POSH-SSH" -Size 6 
-       # New-UDHeading -Text "Finally we will dump and parse the log" -Size 6 
-    }
-    
 
 
     New-UDInput -Title "Retrieve Results" -Id "AgentResultsRetrieval" -Content {

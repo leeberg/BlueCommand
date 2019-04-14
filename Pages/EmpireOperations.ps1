@@ -1,4 +1,4 @@
-New-UDPage -Name "Empire - Operations" -Icon empire -Endpoint {
+New-UDPage -Name "EmpireOperations" -Icon empire -Endpoint {
   
 
     $Session:CurrentlySelectedAgent = "NULL"
@@ -16,12 +16,6 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Endpoint {
     }
 
 
-    New-UDLayout -Columns 1 {
-        New-UDHeading -Size 4 -Content {
-            "Agent Selection"
-        } 
-    }
-    
     #New-UDElement -Id "CurrentAgentUDElement" -Tag "b" -Content  {"Currently Selected Agent: $Session:CurrentlySelectedAgent"}
  
     
@@ -46,11 +40,6 @@ New-UDPage -Name "Empire - Operations" -Icon empire -Endpoint {
     }
 
 
-    New-UDLayout -Columns 1 {
-        New-UDHeading -Size 4 -Content {
-            "Package Selection"
-        } 
-    }
 
     #### Module "Package" Selection Box - With Boxes!
     New-UDGrid -Title "Package Selection" -Headers @("Name", "Description", " ") -Properties @("Name", "Description", "Execute") -AutoRefresh -Endpoint {

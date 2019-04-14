@@ -1,4 +1,4 @@
-New-UDPage -Name "Network - Discovery" -Icon search -Content {
+New-UDPage -Name "NetworkDiscovery" -Icon search -Content {
         
     New-UDInput -Title "Discover Network Resources IPv4 Network Scan" -Id "DiscoveryInput" -Content {
         New-UDInputField -Type 'textarea' -Name 'StartAddress' -Placeholder 'Start IPv4 Address' -DefaultValue '192.168.200.1'

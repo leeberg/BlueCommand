@@ -2,7 +2,7 @@
 
 # Set These Variables - and populate the Credential Object
 $Credential = Get-Credential
-$EmpireServerIP = '192.168.200.155'
+$EmpireServerIP = '192.168.200.106'
 
 
 Import-Module .\bluestrike.psd1 -Force

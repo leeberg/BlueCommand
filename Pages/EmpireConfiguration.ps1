@@ -1,5 +1,6 @@
-New-UDPage -Name "Empire - Configuration" -Icon empire -Endpoint {
+New-UDPage -Name "EmpireConfiguration" -Icon empire -Endpoint {
 
+  
     $NetworkResources = Get-BSNetworkScanData
     $ValidEmpireNetworkResources = @()
 
@@ -15,23 +16,12 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Endpoint {
             #NOT EMPIRE SERVER
         }
     }
-
-
-
-
-
     $EmpireConfig = Get-BSEmpireConfigData
-  
+   
 
 
-    New-UDLayout -Columns 1 {
-        New-UDHeading -Size 4 -Content {
-            "Connect to New Server"
-        } 
-    }
-
-    New-UDInput -Title "Connect to Empire Server" -Id "EmpireConfiguration" -SubmitText "Connect" -Content {
-        New-UDInputField -Type 'select' -Name 'EmpireComputer' -Values $ValidEmpireNetworkResources.HostName
+    New-UDInput -Title "Connect to New Empire Server" -Id "EmpireConfiguration" -SubmitText "Connect" -Content {
+        New-UDInputField -Type 'textarea' -Name 'EmpireIP'
         New-UDInputField -Type 'textarea' -Name 'EmpirePort' -DefaultValue $EmpireConfig.empire_port
         New-UDInputField -Type 'textarea' -Name 'EmpireToken' -DefaultValue $EmpireConfig.empire_token
     } -Endpoint {
@@ -55,17 +45,10 @@ New-UDPage -Name "Empire - Configuration" -Icon empire -Endpoint {
 
     }
 
-    New-UDLayout -Columns 1 {
-        New-UDHeading -Size 4 -Content {
-            "Existing Configuartion"
-        } 
-    
-    }
-    
-    
+  
 
 
-    New-UDGrid -Title "Empire Instance" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
+    New-UDGrid -Title "Existing Empire Instance" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
         $JsonData = Get-BSEmpireConfigData
         If ($JsonData.version)
         {

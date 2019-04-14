@@ -1,5 +1,5 @@
  # Operations Page
-New-UDPage -Name "Network - Operations" -Icon fighter_jet -RefreshInterval 5 -Endpoint {
+New-UDPage -Name "NetworkOperations" -Icon fighter_jet -RefreshInterval 5 -Endpoint {
     
     $NetworkResources = Get-BSNetworkScanData
     
