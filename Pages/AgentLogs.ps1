@@ -12,7 +12,7 @@ New-UDPage -Name "EmpireAgentLogs" -Icon file -Endpoint {
     New-UDInput -Title "Retrieve Logs" -Id "AgentResultsRetrieval" -Content {
         
         New-UDInputField -Type 'select' -Name 'EmpireAgentName' -Values $EmpireAgents.name -DefaultValue (($EmpireAgents | Select-Object -First 1).Name) -Placeholder "Select an Agent"
-        New-UDInputField -Type 'textbox' -Name 'WindowsCredentialName' -DefaultValue 'empireserver' -Placeholder 'Name of Generic Windows Credential to Connect to Empire Server'
+        New-UDInputField -Type 'textbox' -Name 'WindowsCredentialName' -DefaultValue ($Cache:WindowsCredentialName) -Placeholder 'Name of Generic Windows Credential to Connect to Empire Server'
 
     } -Endpoint {
         param($EmpireAgentName, $WindowsCredentialName)

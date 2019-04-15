@@ -1,8 +1,9 @@
 ﻿function Start-BSDash {
     param(
         [Parameter(Mandatory=$true)] $EmpireServer,
-        [Parameter(Mandatory=$true)] $BlueStrikeFolder,
-        [Parameter(Mandatory=$true)] $BlueStrikePort
+        [Parameter(Mandatory=$true)] $BlueCommandFolder,
+        [Parameter(Mandatory=$true)] $BlueCommandPort,
+        [Parameter(Mandatory=$false)] $WindowsCredentialName
     )
 
     # This Caches the Connection Info so the other components and modules can utilze them
@@ -10,11 +11,13 @@
         Server = $EmpireServer
         Credential = $Credential
     }
-
-    $Cache:BlueStrikePort = $BlueStrikePort
+    
+    $Cache:BlueCommandPort = $BlueCommandPort
 
     # Empire Server
     $Cache:EmpireServer = $EmpireServer
+
+    $Cache:WindowsCredentialName = $WindowsCredentialName
 
     $Pages = @()
     $Pages += . (Join-Path $PSScriptRoot "pages\home.ps1")
@@ -27,21 +30,21 @@
     #### DATA FOLDER SETUP
 
     #Folder Pathes
-    $Cache:BlueStrikeFolder = $BlueStrikeFolder
-    $Cache:BlueStrikeDataFolder = $Cache:BlueStrikeFolder + '\Data'
+    $Cache:BlueCommandFolder = $BlueCommandFolder
+    $Cache:BlueCommandDataFolder = $Cache:BlueCommandFolder + '\Data'
 
     #File Paths
-    $Cache:EmpireConfigFilePath = $Cache:BlueStrikeFolder + '\Data\EmpireConfig.json'
-    $Cache:EmpireModuleFilePath = $Cache:BlueStrikeFolder + '\Data\EmpireModules.json'
-    $Cache:EmpireAgentFilePath = $Cache:BlueStrikeFolder + '\Data\EmpireAgents.json'
-    $Cache:NetworkScanFilePath = $Cache:BlueStrikeFolder + '\Data\NetworkScan.json'
-    $Cache:BSLogFilePath = $Cache:BlueStrikeFolder + '\Data\AuditLog.log'
-    $Cache:BSDownloadsPath = $Cache:BlueStrikeFolder + '\Data\Downloads'
+    $Cache:EmpireConfigFilePath = $Cache:BlueCommandFolder + '\Data\EmpireConfig.json'
+    $Cache:EmpireModuleFilePath = $Cache:BlueCommandFolder + '\Data\EmpireModules.json'
+    $Cache:EmpireAgentFilePath = $Cache:BlueCommandFolder + '\Data\EmpireAgents.json'
+    $Cache:NetworkScanFilePath = $Cache:BlueCommandFolder + '\Data\NetworkScan.json'
+    $Cache:BSLogFilePath = $Cache:BlueCommandFolder + '\Data\AuditLog.log'
+    $Cache:BSDownloadsPath = $Cache:BlueCommandFolder + '\Data\Downloads'
 
 
 
-    if((Test-Path -Path $Cache:BlueStrikeFolder)  -eq $false){throw 'The BlueStrike Data Folder does not exist!'}
-    if((Test-Path -Path $Cache:BlueStrikeDataFolder) -eq $false){New-Item -Path $Cache:BlueStrikeDataFolder -ItemType Directory}
+    if((Test-Path -Path $Cache:BlueCommandFolder)  -eq $false){throw 'The BlueStrike Data Folder does not exist!'}
+    if((Test-Path -Path $Cache:BlueCommandDataFolder) -eq $false){New-Item -Path $Cache:BlueCommandDataFolder -ItemType Directory}
     if((Test-Path -Path $Cache:BSDownloadsPath) -eq $false){New-Item -Path $Cache:BSDownloadsPath -ItemType Directory}
     if((Test-Path -Path $Cache:BSLogFilePath) -eq $false){New-Item -Path $Cache:BSLogFilePath -ItemType File}
 
@@ -96,11 +99,11 @@
     
 
     $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueStrikeData.psm1", "Modules\Empire\BlueStrikeEmpire.psm1")
-    $Dashboard = New-UDDashboard -Title "BlueStrike ✈💣💥" -Pages $Pages -EndpointInitialization $BSEndpoints -Theme $DarkDefault 
+    $Dashboard = New-UDDashboard -Title "BlueCommand 🌌" -Pages $Pages -EndpointInitialization $BSEndpoints -Theme $DarkDefault 
     
     Try{
  
-        Start-UDDashboard -Dashboard $Dashboard -Port $Cache:BlueStrikePort -PublishedFolder $DownloadsFolder
+        Start-UDDashboard -Dashboard $Dashboard -Port $Cache:BlueCommandPort -PublishedFolder $DownloadsFolder
       
     }
     Catch

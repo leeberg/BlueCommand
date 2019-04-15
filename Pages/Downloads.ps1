@@ -52,10 +52,10 @@ New-UDPage -Name "EmpireDownloads" -Icon download -Endpoint {
                     $AgentFolder = $ArgumentList[1]
                     $FullPath = $ArgumentList[2]
 
-                    $FullPathWeb = $FullPath.Replace(($Cache:BlueStrikeDataFolder+'\'),"")
+                    $FullPathWeb = $FullPath.Replace(($Cache:BlueCommandDataFolder+'\'),"")
                     $FullPathWeb = $FullPathWeb.Replace('\',"/")
                     
-                    $WebFileURL = 'http://localhost:'+ $Cache:BlueStrikePort + '/' + $FullPathWeb
+                    $WebFileURL = 'http://localhost:'+ $Cache:BlueCommandPort + '/' + $FullPathWeb
                     #Invoke-WebRequest $WebFileURL
                     Invoke-UDRedirect -Url $WebFileURL -OpenInNewWindow
                     
