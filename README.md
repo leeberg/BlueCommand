@@ -1,6 +1,6 @@
 BlueCommand
 ==================
-![](./img/BlueCommand.png) 
+![](./img/bluecommand.png)
 
 **BlueCommand** is Threat Tooling and Simulation platform built with the [PowerShell Universal Dashboard](https://universaldashboard.io/) from [Adam Driscoll](https://github.com/adamdriscoll) and [PowerShell Empire](https://github.com/EmpireProject/Empire) to provide a lightweight web UI for providing a web dashboard/tool front-end for PowerShell Empire.
 
