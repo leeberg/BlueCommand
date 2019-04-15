@@ -1,4 +1,4 @@
-BlueCommand
+BlueCommand 🌌
 ==================
 ![](./img/bluecommand.png)
 
