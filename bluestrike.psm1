@@ -1,7 +1,8 @@
-function Start-BSDash {
+﻿function Start-BSDash {
     param(
         [Parameter(Mandatory=$true)] $EmpireServer,
-        [Parameter(Mandatory=$true)] $BlueStrikeFolder
+        [Parameter(Mandatory=$true)] $BlueStrikeFolder,
+        [Parameter(Mandatory=$true)] $BlueStrikePort
     )
 
     # This Caches the Connection Info so the other components and modules can utilze them
@@ -9,6 +10,8 @@ function Start-BSDash {
         Server = $EmpireServer
         Credential = $Credential
     }
+
+    $Cache:BlueStrikePort = $BlueStrikePort
 
     # Empire Server
     $Cache:EmpireServer = $EmpireServer
@@ -33,11 +36,18 @@ function Start-BSDash {
     $Cache:EmpireAgentFilePath = $Cache:BlueStrikeFolder + '\Data\EmpireAgents.json'
     $Cache:NetworkScanFilePath = $Cache:BlueStrikeFolder + '\Data\NetworkScan.json'
     $Cache:BSLogFilePath = $Cache:BlueStrikeFolder + '\Data\AuditLog.log'
+    $Cache:BSDownloadsPath = $Cache:BlueStrikeFolder + '\Data\Downloads'
+
 
 
     if((Test-Path -Path $Cache:BlueStrikeFolder)  -eq $false){throw 'The BlueStrike Data Folder does not exist!'}
     if((Test-Path -Path $Cache:BlueStrikeDataFolder) -eq $false){New-Item -Path $Cache:BlueStrikeDataFolder -ItemType Directory}
+    if((Test-Path -Path $Cache:BSDownloadsPath) -eq $false){New-Item -Path $Cache:BSDownloadsPath -ItemType Directory}
     if((Test-Path -Path $Cache:BSLogFilePath) -eq $false){New-Item -Path $Cache:BSLogFilePath -ItemType File}
+
+    #Downloads Folder
+    $DownloadsFolder = Publish-UDFolder -Path ($Cache:BSDownloadsPath+'\') -RequestPath '/Downloads'
+
 
     #### THEME    
     
@@ -86,11 +96,11 @@ function Start-BSDash {
     
 
     $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueStrikeData.psm1", "Modules\Empire\BlueStrikeEmpire.psm1")
-    $Dashboard = New-UDDashboard -Title "BlueStrike" -Pages $Pages -EndpointInitialization $BSEndpoints -Theme $DarkDefault
+    $Dashboard = New-UDDashboard -Title "BlueStrike ✈💣💥" -Pages $Pages -EndpointInitialization $BSEndpoints -Theme $DarkDefault 
     
     Try{
  
-        Start-UDDashboard -Dashboard $Dashboard -Port 10000
+        Start-UDDashboard -Dashboard $Dashboard -Port $Cache:BlueStrikePort -PublishedFolder $DownloadsFolder
       
     }
     Catch
@@ -99,25 +109,6 @@ function Start-BSDash {
         Write-BSAuditLog -BSLogContent "BlueStrike Failed to Start!"
     }
     
-
-
-
-}
-
-function Start-BSAPI{
-
-    ### Haven't messed around with this at all
-    ### Next Step to replace module calls with API Calls?
-
-    $Endpoints = @()
-
-    $Endpoints += New-UDEndpoint -url 'GetEmpireModules' -Endpoint {
-        Get-BSEmpireModuleData | ConvertTo-Json
-        
-    }
-
-    Start-UDRestApi -Endpoint $Endpoints -Port 10001 -AutoReload
-
 
 
 

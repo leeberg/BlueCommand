@@ -139,6 +139,65 @@ Function Get-BSEmpireModuleData()
 
 }
 
+Function Get-BSDownloadsCount
+{   
+    $Count = 0
+    $BSDownloadsPath = $Cache:BSDownloadsPath
+    $AgentFiles = ($BSDownloadsPath + '\') | Get-ChildItem -Recurse | where {! $_.PSIsContainer }
+    $Count = $AgentFiles.Count
+
+    return $Count
+}
+
+
+Function Get-BSDownloads
+{   
+    param(
+        $AgentName = $null
+    )
+
+    $BSDownloadsPath = $Cache:BSDownloadsPath
+
+    $DownloadedFiles = @()
+
+    if($AgentName -ne $null)
+    {
+        $AgentFolderName = $Folder.Name
+        $AgentFolderPath = $BSDownloadsPath + '\'+ $AgentName
+        $AgentFiles = ($AgentFolderPath + '\') | Get-ChildItem -Recurse | where { ! $_.PSIsContainer }
+        ForEach($File in $AgentFiles)
+        {
+            $FullPath = $File.FullName
+            $ParentDirectory = $AgentFolderName
+            $Directory = $File.Directory.FullName
+            $DownloadedFiles += $File | Select-Object -Property  Name, FullName, CreationTime, @{Name="Agent"; Expression = {$ParentDirectory}}, @{Name="Directory"; Expression = {$Directory}}, @{Name="FullPath"; Expression = {$FullPath}}
+        }
+        
+    }
+    else 
+    {
+        $AgentFolders = ($Cache:BSDownloadsPath + '\') | Get-ChildItem | ?{ $_.PSIsContainer }
+
+        Foreach($Folder in $AgentFolders)
+        {
+            $AgentFolderName = $Folder.Name
+            $AgentFolderPath = $Folder.FullName
+            $AgentFiles = ($AgentFolderPath + '\') | Get-ChildItem -Recurse | where { ! $_.PSIsContainer }
+            ForEach($File in $AgentFiles)
+            {
+                $FullPath = $File.FullName
+                $ParentDirectory = $AgentFolderName
+                $Directory = $File.Directory.FullName
+                $DownloadedFiles += $File | Select-Object -Property  Name, FullName, CreationTime, @{Name="Agent"; Expression = {$ParentDirectory}},@{Name="Directory"; Expression = {$Directory}}, @{Name="FullPath"; Expression = {$FullPath}}
+            }
+        }
+    }
+
+    return ($DownloadedFiles)
+
+}
+
+
 
 Function Get-BSNetworkScanData()
 {

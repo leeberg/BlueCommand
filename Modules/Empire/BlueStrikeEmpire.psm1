@@ -1,4 +1,4 @@
-#### All functions need to have proper function params, synopsis, help, etc....
+﻿#### All functions need to have proper function params, synopsis, help, etc....
 #### Also where my psd1 file at
 
 Import-Module CredentialManager -force
@@ -98,9 +98,10 @@ function Start-BSEmpireModuleOnAgent
     if($ModuleExecutionStatusCode -eq '200')
     {
         $ModuleExecution = $ModuleExecution.Content | ConvertFrom-Json
-        $Return = (($ModuleExecution.msg) + " Execution Status: " + ($ModuleExecution.success))
+        $Return = (($ModuleExecution.msg) + " - Execution Status: " + ($ModuleExecution.success))
+        $ReturnTitleCase = (Get-Culture).textinfo.totitlecase($Return.tolower())
 
-        return $Return 
+        return $ReturnTitleCase 
     }
     else 
     {
@@ -121,6 +122,7 @@ function Get-AgentDownloads
             
     )
 
+    
     ### USER "CREDENTIAL MANAGER" TO CONNECT TO CRED MANAGER IN WINDERS
     $StoredCredential = Get-StoredCredential -Target $CredentialName
 

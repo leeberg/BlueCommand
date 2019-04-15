@@ -1,61 +1,6 @@
 
 
 New-UDPage -Name "Home" -Icon home -Endpoint {
-            
-    New-UDRow -Columns {
-        
-        New-UDColumn -Size 2 {         
-            New-UDCard -Id 'crd_home1' -Title "" -Content{
-                New-UDButton -Id "BTN_GotoNetworkDiscovery" -Icon search -Text "Network Disc" -OnClick {                                     
-                    $ButtonVar = Invoke-UDRedirect -Url  "/Network---Discovery" 
-                }
-            }     
-        }
-        
-        New-UDColumn -Size 2 {         
-            New-UDCard -Id 'crd_home1' -Title "" -Content{
-                New-UDButton -Id "BTN_GotoNetworkOperations" -Icon expand -Text "Network Ops" -OnClick {                                     
-                    $ButtonVar = Invoke-UDRedirect -Url  "/Network--Operations" 
-                }
-            }     
-        } 
-
-        New-UDColumn -Size 2 {         
-            New-UDCard -Id 'crd_home1' -Title ""  -Content{
-                New-UDButton -Id "BTN_GotoEmpireOperations" -Icon plane -Text "Empire Strike" -OnClick {                                 
-                    $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Operations" 
-                }
-            }
-        }
-        New-UDColumn -Size 2 {         
-            New-UDCard -Id 'crd_home1' -Title "" -Content{
-                New-UDButton -Id "BTN_GotoEmpireResults" -Icon money_bill -Text "Empire Results" -OnClick {                                 
-                    $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Results" 
-                }         
-            }
-        }   
-        New-UDColumn -Size 2 {         
-            New-UDCard -Id 'crd_home1' -Title "" -Content{
-                New-UDButton -Id "BTN_GotoEmpireConfiguration" -Icon empire -Text "Empire Config" -OnClick {                                     
-                    $ButtonVar = Invoke-UDRedirect -Url  "/Empire---Configuration" 
-                }
-            }
-        }   
-         
-        New-UDColumn -Size 2 {         
-            New-UDCard -Id 'crd_home1' -Title "" -Content{
-                New-UDButton -Id "BTN_GotoHelpAbout" -Icon question -Text "Help" -OnClick {                                     
-                    $ButtonVar = Invoke-UDRedirect -Url  "/About" 
-                }
-            }     
-        }
-
-
-        
-       
-        
-    }
-    
 
     ### CARD COUNTS
     $EmpireAgentsJsonData = Get-BSEmpireAgentData
@@ -73,15 +18,7 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
 
         New-UDColumn -Size 2 {    
 
-            New-UDCounter -Title "Network Resources Discovered" -Endpoint {
-                $NetworkResourcesCount | ConvertTo-Json
-            }
-
-        }
-
-        New-UDColumn -Size 2 {    
-
-            New-UDCounter -Title "Modules Currently Loaded" -Endpoint {
+            New-UDCounter -Title "Empire Modules" -BackgroundColor '#4C9BF3' -FontColor '#FFFFFF' -Endpoint {
                 $EmpireModuleCount | ConvertTo-Json
             }
 
@@ -89,24 +26,40 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
         
         New-UDColumn -Size 2 {    
 
-            New-UDCounter -Title "Agents Currently Active" -Endpoint {
+            New-UDCounter -Title "Active Agents" -BackgroundColor '#4CC6DB' -FontColor '#FFFFFF' -Endpoint {
                 $EmpireAgentsCount | ConvertTo-Json
             }
 
         }
 
+        New-UDColumn -Size 2 {    
+
+            New-UDCounter -Title "Agent Files" -BackgroundColor '#7561F1' -FontColor '#FFFFFF' -Endpoint {
+                Get-BSDownloadsCount | ConvertTo-Json
+            }
+
+        }
+        <#
+        New-UDColumn -Size 2 {    
+
+            New-UDCounter -Title "Agent Files Downloaded" -BackgroundColor '#F2496A' -FontColor '#FFFFFF' -Endpoint {
+                Get-BSDownloadsCount | ConvertTo-Json
+            }
+
+        }
+        #>
+
+
     }
 
-    
-    $JsonData = Get-BSNetworkScanData
-    New-UDGrid -Title "Known Resources" -Headers @("HostName", "IPv4", "Status","Computer") -Properties @("HostName", "IPv4", "Status","Computer") -Endpoint {
-        
-            $JsonData | Out-UDGridData
+    New-UDTable -Title "Existing Empire Instance" -Id "ExistingEmpireInstance" -Headers @("Empire IP","Version", "Path", "Sync Time")  -Endpoint {
+        $JsonData = Get-BSEmpireConfigData 
+        $JsonData | Out-UDTableData -Property @("empire_host","version", "install_path", "sync_time")
     }
 
 
     $JsonData = Get-BSEmpireAgentData
-    New-UDGrid -Title "Empire Agents" -Headers @("Name", "checkin_time","lastseen_time","external_ip","hostname","listener","OS","username") -Properties @("name", "checkin_time","lastseen_time","external_ip","hostname","listener","os_details","username") -AutoRefresh -Endpoint {
+    New-UDGrid -Title "Empire Agents" -Headers @("Name", "Created", "Last Seen","External IP","Hostname","Listener","OS","Username") -Properties @("name", "checkin_time","lastseen_time","external_ip","hostname","listener","os_details","username") -AutoRefresh -Endpoint {
             
             $JsonData | Out-UDGridData
     }  

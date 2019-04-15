@@ -54,7 +54,7 @@ New-UDPage -Name "EmpireConfiguration" -Icon empire -Endpoint {
   
 
 
-    New-UDGrid -Title "Existing Empire Instance" -Id "ExistingEmpireInstance" -Headers @("version", "api_username", "install_path") -Properties @("version", "api_username", "install_path") -AutoRefresh -Endpoint {
+    New-UDGrid -Title "Existing Empire Instance" -Id "ExistingEmpireInstance" -Headers @("empire_host","version", "api_username", "install_path", "sync_time") -Properties @("empire_host","version", "api_username", "install_path", "sync_time") -Endpoint {
         $JsonData = Get-BSEmpireConfigData
         If ($JsonData.version)
         {

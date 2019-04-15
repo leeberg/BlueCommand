@@ -6,12 +6,11 @@ BlueStrike
 
 ## Features
 * Built on [Universal Dashboard](https://universaldashboard.io/) for modern web based UI
-* PowerShell based network scanning/discovery
-* PowerShell Network Operations
 * [PowerShell Empire](https://www.powershellempire.com/) Integration
     * Rest Integration to retrive Agents, Configs, Modules, Etc.
     * Search and Execute Modules (with Options) on the fly!
     * Export Action Results / Reports from Empire
+    * View / Download Agent Files
 
 ## Getting Started
 

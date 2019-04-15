@@ -1,4 +1,4 @@
-New-UDPage -Name "EmpireExecution" -Icon empire -Endpoint {
+New-UDPage -Name "EmpireExecution" -Icon plane -Endpoint {
   
 
     $Session:CurrentlySelectedAgent = "NULL"  
@@ -63,28 +63,29 @@ New-UDPage -Name "EmpireExecution" -Icon empire -Endpoint {
                             {
                                 $ExecutuionLog = 'Empire Operations: Executing Action: ' +  $ModuleName +' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
                                 Write-BSAuditLog -BSLogContent $ExecutuionLog
-                                $EmpireModuleExeuction = Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
+                                $EmpireModuleExecution = Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName
                             }
                             else 
                             {
                                 $ExecutuionLog = 'Empire Operations: Executing Action: ' +  $ModuleName +' WITH OPTIONS: ' + $OptionsJSON + ' on: ' + $EmpireAgentName + " which lives on $EmpireBox"
                                 Write-BSAuditLog -BSLogContent $ExecutuionLog
-                                $EmpireModuleExeuction = Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName -Options $OptionsJSON
+                                $EmpireModuleExecution = Start-BSEmpireModuleOnAgent -EmpireBox $EmpireBox -EmpireToken $EmpireToken -EmpirePort $EmpirePort -AgentName $EmpireAgentName -ModuleName $ModuleName -Options $OptionsJSON
                             }
                                                                            
                             
-                            Write-BSAuditLog -BSLogContent $EmpireModuleExeuction
+                            Write-BSAuditLog -BSLogContent $EmpireModuleExecution
+
 
                             Clear-UDElement -Id "StrikePackageExecution"
                             Add-UDElement -ParentId "StrikePackageExecution" -Content {
-                                    New-UDHtml -Markup '<b>STRIKE STATUS: <font size="3" color="red">EXECUTED</font></b>'
+                                    New-UDHtml -Markup ('<font size="3" color="black"><b>STRIKE STATUS: </font><font size="3" color="red">EXECUTED</font></b><br>' + '<font size="3" color="black">' + $EmpireModuleExecution + '</font>')
                             }
-
 
                         }
 
-
-                        New-UDElement -Id "StrikePackageExecution" -Tag "b" -Content  {"STRIKE STATUS: DEPLOYMENT READY"}
+                        New-UDElement -Id "StrikePackageExecution" -Tag "b" -Content  {
+                            New-UDHtml -Markup ('<font size="3" color="black">STRIKE STATUS: DEPLOYMENT READY</font>')
+                        }
     
                         
                     } 
