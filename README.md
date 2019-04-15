@@ -29,8 +29,8 @@ BlueCommand 🌌
 ### Usage
 1. Populate your environment variables in the Start Script.
 2. Run the Start Script
-3. Connect to the your Empire Server on the Empire Configuration Page or use Network Discovery to discover your Empire Server.
-    + Enter your Empire IP and REST Key and BlueCommand will connect to your empire server allowing you to execute commands. ![](./img/empire_rest.png) 
-4.  BlueCommand will try and utilze POSH-SSH to SCP Download the Empire Agents Downloads/Logs - store a "Generic Credential" in your windows credential manager to facilitate this. ![](./img/credential_manager.png) 
+3. Connect to your Empire Server on the Empire Configuration Page using your Empire Server IP, and Rest API Key.
+    * ![](./img/empire_rest.png) 
+4.  BlueCommand will try and utilze POSH-SSH to SCP Download the Empire Agents Downloads/Logs - This requires a stored a "Generic Credential" in your windows credential manager to facilitate this. ![](./img/credential_manager.png) 
 5.  
     ![](https://media.giphy.com/media/MGaacoiAlAti0/giphy.gif)
