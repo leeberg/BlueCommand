@@ -115,7 +115,7 @@ function Get-AgentDownloads
 {
     Param(
         $CredentialName = 'empireserver',
-        $EmpireServer = 'empireserver01',
+        $EmpireServer = '192.168.200.106',
         $EmpireDirectory = "/home/lee/Empire",
         $EmpireAgentName = "8BYZEAXN",
         $DownloadFolder = "C:\Users\lee\Desktop\bluestriketesting\"
@@ -175,7 +175,7 @@ Function Get-LocalAgentLogDetails
                 }
     
                 $ResultObject = [PSCustomObject]@{
-                    TimeStamp = $Line
+                    TimeStamp = ($Line.ToString().Replace(' :',''))
                     Message = "test"
                 }
     
@@ -192,14 +192,11 @@ Function Get-LocalAgentLogDetails
         
     }
     
-    <#
-    foreach ($object in $AgentResultObjects)
-    {
-        $object
-    }
-    #>
+    
     
     Return $AgentResultObjects
+    
+    
     
    
 
