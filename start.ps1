@@ -9,4 +9,4 @@ Import-Module .\bluestrike.psd1 -Force
 
 Get-UDDashboard | Stop-UDDashboard
 Get-UDRestApi | Stop-UDRestAPI
-Start-BSDash -EmpireServer $EmpireServerIP -BlueCommandFolder $BlueCommandFolder -BlueCommandPort 10001 -WinCred $WindowsCredentialName
+Start-BSDash -EmpireServer $EmpireServerIP -BlueCommandFolder $BlueCommandFolder -BlueCommandPort 10001 -WindowsCredentialName $WindowsCredentialName

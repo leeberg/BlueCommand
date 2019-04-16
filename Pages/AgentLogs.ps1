@@ -41,10 +41,10 @@ New-UDPage -Name "EmpireAgentLogs" -Icon file -Endpoint {
         Show-UDModal -Content {
             New-UDHeading -Size 4 -Text "Agent Results Download"
             New-UDHeading -Size 6 -Text "Agent: $EmpireAgentName Results downloaded to: $LocalAgentDownloadFolder"
-            New-UDGrid -Title "Agent Logs" -Headers @("TimeStamp", "Message") -Properties @("TimeStamp","Message") -Endpoint {
+            New-UDTable -Title "Agent Logs" -Headers @("TimeStamp", "Message")  -Endpoint {
 
                 #TODO - THIS IS BUG! TABLE WORKS FINE
-                    $AgentLogDetails | Out-UDGridData
+                    $AgentLogDetails | Out-UDTableData -Property @("TimeStamp","Message")
             }
 
         
