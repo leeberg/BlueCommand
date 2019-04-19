@@ -22,8 +22,8 @@ public class TrustAllCertsPolicy : ICertificatePolicy {
 function Get-EmpireModules
 {
     param(
-        $EmpireBox = '192.168.200.108',
-        $EmpireToken = 'ebrg7z9snihbp0lbfe9qs0fxtwwsm44fk3waffar',
+        [Parameter(Mandatory=$true)] $EmpireBox,
+        [Parameter(Mandatory=$true)] $EmpireToken,
         $EmpirePort = '1337'
     )
     
@@ -58,11 +58,11 @@ function Get-EmpireModules
 function Start-BSEmpireModuleOnAgent
 {
     Param(
-        $EmpireBox = '192.168.200.106',
-        $EmpireToken = 'eoxexp9ziywcb3vih3fipyk2a8gufq7olfihxpxx',
+        [Parameter(Mandatory=$true)] $EmpireBox,
+        [Parameter(Mandatory=$true)] $EmpireToken,
         $EmpirePort = '1337',
-        $AgentName = '8BYZEAXN',
-        $ModuleName = 'powershell/collection/screenshot',
+        [Parameter(Mandatory=$true)] $AgentName,
+        [Parameter(Mandatory=$true)] $ModuleName,
         $Options = $null
     )
 
@@ -114,11 +114,11 @@ function Start-BSEmpireModuleOnAgent
 function Get-AgentDownloads
 {
     Param(
-        $CredentialName = 'empireserver',
-        $EmpireServer = '192.168.200.106',
-        $EmpireDirectory = "/home/lee/Empire",
-        $EmpireAgentName = "8BYZEAXN",
-        $DownloadFolder = "C:\Users\lee\Desktop\bluestriketesting\"
+        [Parameter(Mandatory=$true)] $CredentialName,
+        [Parameter(Mandatory=$true)] $EmpireServer,
+        [Parameter(Mandatory=$true)] $EmpireDirectory,
+        [Parameter(Mandatory=$true)] $EmpireAgentName,
+        [Parameter(Mandatory=$true)] $DownloadFolder
             
     )
 
@@ -147,8 +147,8 @@ Function Get-LocalAgentLogDetails
 {
 
     Param(
-        $DownloadFolder = 'C:\Users\lee\Desktop\bluestriketesting\',
-        $EmpireAgentName = "8BYZEAXN"
+        [Parameter(Mandatory=$true)] $DownloadFolder,
+        [Parameter(Mandatory=$true)] $EmpireAgentName
     )
     
     $LocalAgentDownloadFolder = $DownloadFolder + $EmpireAgentName
@@ -205,9 +205,9 @@ Function Get-LocalAgentLogDetails
 Function Get-EmpireInformation
 {
     Param(
-    $EmpireBox = '192.168.200.108',
-    $EmpireToken = '6jq0or8kcawfi4vjyktehwuqugv7uhxes04mrqkq',
-    $EmpirePort = '1337'
+        [Parameter(Mandatory=$true)]$EmpireBox,
+        [Parameter(Mandatory=$true)]$EmpireToken,
+        $EmpirePort = '1337'
 )
 
 
@@ -240,10 +240,10 @@ Function Get-EmpireAgentResults
 {
     
     Param(
-        $EmpireBox = '192.168.200.108',
-        $EmpireToken = 'ebrg7z9snihbp0lbfe9qs0fxtwwsm44fk3waffar',
+        [Parameter(Mandatory=$true)]$EmpireBox,
+        [Parameter(Mandatory=$true)]$EmpireToken,
         $EmpirePort = '1337',
-        $AgentName = "8BYZEAXN"
+        [Parameter(Mandatory=$true)]$AgentName
     )
 
     $uri = 'https://'+$EmpireBox+':'+$EmpirePort+'/api/agents/'+$AgentName+'/results?token='+$EmpireToken
@@ -269,9 +269,9 @@ Function Get-EmpireAgentResults
 Function Get-EmpireAgents
 {
     Param(
-    $EmpireBox = '192.168.200.108',
-    $EmpireToken = 'svcx1oa9ynrqy0pc089qs4s0askox1evhk3c9k6w',
-    $EmpirePort = '1337'
+        [Parameter(Mandatory=$true)]$EmpireBox,
+        [Parameter(Mandatory=$true)]$EmpireToken,
+        $EmpirePort = '1337'
     )
 
 
@@ -309,9 +309,9 @@ Function Get-EmpireAgents
 Function Get-EmpireModules{
 
     Param(
-    $EmpireBox = '192.168.200.108',
-    $EmpireToken = 'ebrg7z9snihbp0lbfe9qs0fxtwwsm44fk3waffar',
-    $EmpirePort = '1337'
+        [Parameter(Mandatory=$true)] $EmpireBox,
+        [Parameter(Mandatory=$true)] $EmpireToken,
+        $EmpirePort = '1337'
     )
 
     #Get Agents
@@ -345,9 +345,9 @@ Function Get-EmpireModules{
 Function Get-EmpireStatus
 {
     Param(
-    $EmpireBox = '192.168.200.108',
-    $EmpireToken = 'kw666mgmp9kuddku6bs87ctb8jtmr04z4jpu97a5',
-    $EmpirePort = '1337'
+        [Parameter(Mandatory=$true)] $EmpireBox,
+        [Parameter(Mandatory=$true)] $EmpireToken,
+        $EmpirePort = '1337'
     )
 
     #Get Configuration
@@ -381,10 +381,10 @@ Function Get-EmpireReports
     #https://github.com/EmpireProject/Empire/wiki/RESTful-API
 
     Param(
-        $EmpireBox = '192.168.200.108',
-        $EmpireToken = 'ebrg7z9snihbp0lbfe9qs0fxtwwsm44fk3waffar',
+        [Parameter(Mandatory=$true)] $EmpireBox,
+        [Parameter(Mandatory=$true)] $EmpireToken,
         $EmpirePort = '1337',
-        $AgentName = "8BYZEAXN",
+        [Parameter(Mandatory=$true)] $AgentName,
         $Options = "",
         $ReportType  =  "result"  #task, result, checkin
     )

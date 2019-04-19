@@ -1,5 +1,3 @@
-
-
 New-UDPage -Name "Home" -Icon home -Endpoint {
 
     ### CARD COUNTS
@@ -11,8 +9,6 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
     $EmpireAgentsCount = ($EmpireAgentsJsonData | Measure | Select-Object Count).Count
     $EmpireModuleCount = $EmpireModulesJsonData.Count
     
-
-
     New-UDRow -Columns {
         
 
@@ -63,8 +59,7 @@ New-UDPage -Name "Home" -Icon home -Endpoint {
             
             $JsonData | Out-UDGridData
     }  
-    
-    #>      
+       
         
     
 }

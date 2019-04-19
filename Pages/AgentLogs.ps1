@@ -31,7 +31,7 @@ New-UDPage -Name "EmpireAgentLogs" -Icon file -Endpoint {
 
         # EXECUTE DOWNLOAD LOGS FOR AGENT
         Write-BSAuditLog -BSLogContent "Empire Results: Attempting to Download Data from Agent: $EmpireAgentName to $DownloadFolder"
-        $AgentLogDownloadStatus = Get-AgentDownloads -EmpireServer $Cache:EmpireServer -EmpireAgentName $EmpireAgentName -EmpireBox $EmpireBox -DownloadFolder $DownloadFolder -CredentialName $WindowsCredentialName
+        $AgentLogDownloadStatus = Get-AgentDownloads -EmpireServer $Cache:EmpireServer -EmpireDirectory $Cache:EmpireDirectory -EmpireAgentName $EmpireAgentName -DownloadFolder $DownloadFolder -CredentialName $WindowsCredentialName
         
         Write-BSAuditLog -BSLogContent "Empire Results: Attempting to Read Downloaded Data from Agent: $EmpireAgentName"
         $AgentLogDetails = Get-LocalAgentLogDetails -EmpireAgentName $EmpireAgentName -DownloadFolder $DownloadFolder

@@ -21,7 +21,7 @@ New-UDPage -Name "EmpireConfiguration" -Icon empire -Endpoint {
 
 
     New-UDInput -Title "Connect to New Empire Server" -Id "EmpireConfiguration" -SubmitText "Connect" -Content {
-        New-UDInputField -Type 'textarea' -Name 'EmpireIP'
+        New-UDInputField -Type 'textarea' -Name 'EmpireIP' -DefaultValue $Cache:EmpireServer
         New-UDInputField -Type 'textarea' -Name 'EmpirePort' -DefaultValue '1337'
         New-UDInputField -Type 'textarea' -Name 'EmpireToken' -DefaultValue $EmpireConfig.empire_token
     } -Endpoint {

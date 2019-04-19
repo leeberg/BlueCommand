@@ -4,7 +4,7 @@
 Function Get-BSJSONObject 
 {
 Param(
-    $BSFile = ''
+    [Parameter(Mandatory=$true)] $BSFile
 )
 
     if(Test-Path($BSFile))
@@ -228,7 +228,7 @@ Function Get-BSNetworkScanData()
 Function Clear-BSJON
 {
 Param(
-    $BSFile = ''
+    [Parameter(Mandatory=$true)] $BSFile
 )
     if(Test-Path($BSFile))
     {
@@ -273,12 +273,11 @@ $BSObjectData | ConvertTo-Json | Out-File $BSFile -Append
 Function Write-BSEmpireAgentData
 {
 Param (
-    $BSObjectData        
+    [Parameter(Mandatory=$true)] $BSObjectData
 )
 
     Clear-BSJON -BSFile $Cache:EmpireAgentFilePath
     Write-BSJSON -BSFile $Cache:EmpireAgentFilePath -BSObjectData $BSObjectData
-
 
 }
 
@@ -286,8 +285,8 @@ Param (
 Function Write-BSEmpireConfigData
 {
 Param (
-    $BSObjectData        
-)
+    [Parameter(Mandatory=$true)] $BSObjectData
+    )
     Clear-BSJON -BSFile $Cache:EmpireConfigFilePath
     Write-BSJSON -BSFile $Cache:EmpireConfigFilePath -BSObjectData $BSObjectData
 
@@ -297,7 +296,7 @@ Param (
 Function Write-BSEmpireModuleData
 {
 Param (
-    $BSObjectData        
+    [Parameter(Mandatory=$true)] $BSObjectData
 )
     Clear-BSJON -BSFile $Cache:EmpireModuleFilePath
     Write-BSJSON -BSFile $Cache:EmpireModuleFilePath -BSObjectData $BSObjectData
@@ -310,7 +309,7 @@ Param (
 Function Write-BSNetworkScanData
 {
 Param (
-    $BSObjectData        
+    [Parameter(Mandatory=$true)] $BSObjectData
 )
     Clear-BSJON -BSFile $Cache:NetworkScanFilePath
     Write-BSJSON -BSFile $Cache:NetworkScanFilePath -BSObjectData $BSObjectData
@@ -320,7 +319,7 @@ Param (
 Function Write-BSAuditLog
 {
 Param (
-    $BSLogContent
+    [Parameter(Mandatory=$true)] $BSLogContent
 )
     $BSLogContentFormatted = ($(Get-Date -Format 'yyyy-MM-dd hh:mm:ss') + ' : ' + $BSLogContent)
     $BSLogContentFormatted | Out-File $Cache:BSLogFilePath -Append

@@ -1,6 +1,8 @@
 ﻿function Start-BSDash {
     param(
         [Parameter(Mandatory=$true)] $EmpireServer,
+        [Parameter(Mandatory=$true)] $EmpireDirectory,
+        [Parameter(Mandatory=$true)] $EmpirePort,
         [Parameter(Mandatory=$true)] $BlueCommandFolder,
         [Parameter(Mandatory=$true)] $BlueCommandPort,
         [Parameter(Mandatory=$false)] $WindowsCredentialName
@@ -12,10 +14,13 @@
         Credential = $Credential
     }
     
+    #Dashboard Port
     $Cache:BlueCommandPort = $BlueCommandPort
-
+    
     # Empire Server
     $Cache:EmpireServer = $EmpireServer
+    $Cache:EmpireDirectory = $EmpireDirectory
+    $Cache:EmpirePort = $EmpirePort
 
     $Cache:WindowsCredentialName = $WindowsCredentialName
 
@@ -43,7 +48,7 @@
 
 
 
-    if((Test-Path -Path $Cache:BlueCommandFolder)  -eq $false){throw 'The BlueStrike Data Folder does not exist!'}
+    if((Test-Path -Path $Cache:BlueCommandFolder)  -eq $false){throw 'The BlueCommand Data Folder does not exist!'}
     if((Test-Path -Path $Cache:BlueCommandDataFolder) -eq $false){New-Item -Path $Cache:BlueCommandDataFolder -ItemType Directory}
     if((Test-Path -Path $Cache:BSDownloadsPath) -eq $false){New-Item -Path $Cache:BSDownloadsPath -ItemType Directory}
     if((Test-Path -Path $Cache:BSLogFilePath) -eq $false){New-Item -Path $Cache:BSLogFilePath -ItemType File}
@@ -97,19 +102,15 @@
             }
     }
     
-
-    $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueStrikeData.psm1", "Modules\Empire\BlueStrikeEmpire.psm1")
+    $BSEndpoints = New-UDEndpointInitialization -Module @("Modules\Empire\BlueCommandData.psm1", "Modules\Empire\BlueCommandEmpire.psm1")
     $Dashboard = New-UDDashboard -Title "BlueCommand 🌌" -Pages $Pages -EndpointInitialization $BSEndpoints -Theme $DarkDefault 
     
     Try{
- 
         Start-UDDashboard -Dashboard $Dashboard -Port $Cache:BlueCommandPort -PublishedFolder $DownloadsFolder
-      
     }
     Catch
     {
         Write-Error($_.Exception)
-        Write-BSAuditLog -BSLogContent "BlueStrike Failed to Start!"
     }
     
 

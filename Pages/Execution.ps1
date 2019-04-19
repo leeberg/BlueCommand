@@ -32,12 +32,11 @@ New-UDPage -Name "EmpireExecution" -Icon plane -Endpoint {
                 {
 
                     Show-UDModal -Content {
-                        New-UDTable -Title "Strike Package Details" -Headers @("Name", "Description", "Agent") -Endpoint {
+                        New-UDTable -Title "Strike Package Details" -Headers @("Name", "Description") -Endpoint {
                             @{
                                 'Name' = $ModuleName
                                 'Description' = $ModuleDescription
-                                'Agent' = $EmpireAgentName
-                            } | Out-UDTableData -Property @("Name", "Description", "Agent", "Options")
+                            } | Out-UDTableData -Property @("Name", "Description")
                             
                         }
 
